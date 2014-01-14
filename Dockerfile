@@ -24,9 +24,6 @@ run pip install setuptools --no-use-wheel --upgrade
 run pip install virtualenv
 run pip install uwsgi
 run mkdir -p /opt/apps; cd /opt/apps; git clone https://github.com/science-automation/scivm-dashboard.git
-ADD local_settings.py /opt/apps/scivm-dashboard/scivm/local_settings.py
-ADD server.crt /opt/apps/scivm-dashboard/.docker/server.crt
-ADD server.key /opt/apps/scivm-dashboard/.docker/server.key
 run virtualenv --no-site-packages $SCIVM_VE_DIR
 run $SCIVM_VE_DIR/bin/pip install MySQL-Python==1.2.3
 run $SCIVM_VE_DIR/bin/pip install psycopg2
