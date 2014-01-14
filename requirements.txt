@@ -23,3 +23,6 @@ wsgiref==0.1.2
 django-json-field==0.5.5
 ipython
 cloud
+
+zerorpc
+sh
