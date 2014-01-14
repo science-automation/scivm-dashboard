@@ -64,26 +64,29 @@ class CloudResourceMixin(object):
         
         Features:
 
-        *   @dispatch decortor support
-        *   logs incoming data of picloud client requests if settings.DEBUG=True
-        *   jids file unpacker and validator
+        *   @dispatch decorator support
+        *   logs incoming data if settings.DEBUG=True
+        *   json file unpacker 
+        *   jids file unpacker
 
     """
     
-    def load_jids_from_request(self, request, name):
-        """ Try to load and validate JIDS object from request.FILES """
-        
+    def load_json_from_file(self, request, name):
+        """ Try to load json object from request.FILES[<name>] """
         if name not in request.FILES:
-            logger.debug("jids file is missing: %s" % name)
+            logger.debug("file is missing: %s" % name)
             raise ValidationError("%s is required" % name)
         
         try:
-            data = UnPacker(request.FILES[name]).next()
-            jids_desc = json.loads(data)
+            raw = UnPacker(request.FILES[name]).next()
+            return json.loads(raw)
         except Exception, e:
-            logger.debug("cannot parse jids in %s: %s" % (name, str(e)))
+            logger.debug("cannot load json in %s: %s" % (name, str(e)))
             raise ValidationError("%s cannot be parsed" % name)
-        
+    
+    def load_jids_from_file(self, request, name):
+        """ Try to load jids object from request.FILES[<name>] """
+        jids_desc = self.load_json_from_file(request, name)
         try:
             return JIDS(jids_desc)
         except Exception, e:
@@ -185,11 +188,12 @@ class CloudResourceMixin(object):
                 self.wrap_view('%s' % attr_name), 
                 name="cloudapi-%s-%s" % (rn, attr_name.replace("_","-")[:-4]),
         ) 
-        #logger.info("cloudapi pattern registered: %s" % url)
+        # logger.info("cloudapi pattern registered: %s" % url)
         return url
     
     def raise_response(self, request, data, response_class=http.HttpResponse):
         raise ImmediateHttpResponse(self.error_response(request, data, response_class=response_class))
+
 
 class CloudResource(CloudResourceMixin, Resource):
     """ Our tastypie.Resource extension """

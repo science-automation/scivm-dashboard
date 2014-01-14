@@ -23,27 +23,27 @@ class CloudRestResource(CloudResource):
         detail_allowed_methods = []
 
     @dispatch
-    def register_hnd(self, request, **kwrags):
+    def register_hnd(self, request, **kwargs):
         return self.create_response(request, {})
     
     @dispatch
-    def deregister_hnd(self, request, **kwrags):
+    def deregister_hnd(self, request, **kwargs):
         return self.create_response(request, {})
     
     @dispatch
-    def list_hnd(self, request, **kwrags):
+    def list_hnd(self, request, **kwargs):
         return self.create_response(request, {})
     
     @dispatch
-    def info_hnd(self, request, **kwrags):
+    def info_hnd(self, request, **kwargs):
         return self.create_response(request, {})
     
     @dispatch("/invoke/(?P<pk>\d+)/")
-    def invoke_hnd(self, request, **kwrags):
+    def invoke_hnd(self, request, **kwargs):
         return self.create_response(request, {})
     
     @dispatch("/invoke/(?P<pk>\d+)/map/")
-    def invoke_map_hnd(self, request, **kwrags):
+    def invoke_map_hnd(self, request, **kwargs):
         return self.create_response(request, {})
     
 

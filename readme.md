@@ -17,7 +17,8 @@ is running on localhost.
 * `python manage.py createsuperuser`
 * `python manage.py runserver`
 * `python manage.py celery worker -B --scheduler=djcelery.schedulers.DatabaseScheduler -E` (in another terminal)
-* Open browser to http://localhost:8000
+*  Open browser to http://localhost:8000
+
 
 Alternate dev setup using vagrant (this will install all dependencies including
 docker itself for a self-contained dev environment):
@@ -30,3 +31,10 @@ docker itself for a self-contained dev environment):
 * `./manage.py runserver 0.0.0.0:8000`
 * `./manage.py celery worker -B --scheduler=djcelery.schedulers.DatabaseScheduler -E` (in separate ssh session)
 * Open browser to http://localhost:8000
+
+# Scicloud API
+These extra steps needed to be able to use the scicloud api:
+
+* `python manage.py celery worker -E -P gevent -c 1000`
+* `python manage.py consume_job_results`
+* `python picloud/backends/modman_service.py` # see more in picloud/backends/conf.py

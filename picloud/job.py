@@ -46,7 +46,7 @@ class CloudJobResource(CloudResource):
         
         depends_on = None
         if "depends_on" in request.FILES:
-            depends_on = self.load_jids_from_request(request, "depends_on")
+            depends_on = self.load_jids_from_file(request, "depends_on")
             if not UserJobCounter.is_allocated(request.user, depends_on.top()):
                 return self.error_response(request, {"error": {"msg": "Sepcified dependency does not exist." , "code": 464, "retry": False}}, response_class=http.HttpBadRequest) 
 
@@ -116,7 +116,7 @@ class CloudJobResource(CloudResource):
             
             depends_on = None
             if "depends_on" in request.FILES:
-                depends_on = self.load_jids_from_request(request, "depends_on")
+                depends_on = self.load_jids_from_file(request, "depends_on")
                 if not UserJobCounter.is_allocated(request.user, depends_on.top()):
                     return self.error_response(request, {"error": {"msg": "Sepcified dependency does not exist." , "code": 464, "retry": False}}, response_class=http.HttpResponse) 
             
@@ -213,7 +213,7 @@ class CloudJobResource(CloudResource):
     def info_hnd(self, request, **kwargs):
         """ get info about a job """ 
         # load and validate jids
-        jids = self.load_jids_from_request(request, "jids")
+        jids = self.load_jids_from_file(request, "jids")
         if not UserJobCounter.is_allocated(request.user, jids.top()):
             return self.error_response(request, {"error": {"msg": "Could not find requested job.", "code": 454, "retry": False}}, response_class=http.HttpResponse) #FIXME 
          
@@ -280,7 +280,7 @@ class CloudJobResource(CloudResource):
     
     @dispatch
     def result_serialized_hnd(self, request, **kwargs):
-        jids = self.load_jids_from_request(request, "jids")
+        jids = self.load_jids_from_file(request, "jids")
         if not UserJobCounter.is_allocated(request.user, jids.top()):
             return self.error_response(request, {"error": {"msg": "Could not find requested job.", "code": 454, "retry": False}}, response_class=http.HttpResponse) #FIXME 
 
@@ -307,14 +307,14 @@ class CloudJobResource(CloudResource):
     @dispatch
     def result_serialized_global_hnd(self, request, **kwargs):
         """ ????? """
-        jids = self.load_jids_from_request(request, "jids")
+        jids = self.load_jids_from_file(request, "jids")
         if not UserJobCounter.is_allocated(request.user, jids.top()):
             return self.error_response(request, {"error": {"msg": "Could not find requested job.", "code": 454, "retry": False}}, response_class=http.HttpResponse) #FIXME 
         return self.create_response(request, {})
     
     @dispatch
     def kill_hnd(self, request, **kwargs):
-        jids = self.load_jids_from_request(request, "jids")
+        jids = self.load_jids_from_file(request, "jids")
         if not UserJobCounter.is_allocated(request.user, jids.top()):
             return self.error_response(request, {"error": {"msg": "Could not find requested job.", "code": 454, "retry": False}}, response_class=http.HttpResponse) #FIXME 
         
@@ -326,7 +326,7 @@ class CloudJobResource(CloudResource):
     
     @dispatch
     def delete_hnd(self, request, **kwargs):
-        jids = self.load_jids_from_request(request, "jids")
+        jids = self.load_jids_from_file(request, "jids")
         if not UserJobCounter.is_allocated(request.user, jids.top()):
             return self.error_response(request, {"error": {"msg": "Could not find requested job.", "code": 454, "retry": False}}, response_class=http.HttpResponse) #FIXME 
         
@@ -339,7 +339,7 @@ class CloudJobResource(CloudResource):
     @dispatch
     def bucketmap_hnd(self, request, **kwargs):
         """ see cloud client bucket.py """
-        jids = self.load_jids_from_request(request, "jids")
+        jids = self.load_jids_from_file(request, "jids")
         if not UserJobCounter.is_allocated(request.user, jids.top()):
             return self.error_response(request, {"error": {"msg": "Could not find requested job.", "code": 454, "retry": False}}, response_class=http.HttpResponse) #FIXME 
         return self.create_response(request, {})
@@ -347,7 +347,7 @@ class CloudJobResource(CloudResource):
     @dispatch
     def filemap_hnd(self, request, **kwargs):
         """ see cloud client files.py """
-        jids = self.load_jids_from_request(request, "jids")
+        jids = self.load_jids_from_file(request, "jids")
         if not UserJobCounter.is_allocated(request.user, jids.top()):
             return self.error_response(request, {"error": {"msg": "Could not find requested job.", "code": 454, "retry": False}}, response_class=http.HttpResponse) #FIXME 
         return self.create_response(request, {})
