@@ -23,18 +23,18 @@ class CloudRealtimeResource(CloudResource):
         detail_allowed_methods = []
 
     @dispatch
-    def request_hnd(self, request, **kwrags):
+    def request_hnd(self, request, **kwargs):
         return self.create_response(request, {})
     
     @dispatch
-    def release_hnd(self, request, **kwrags):
+    def release_hnd(self, request, **kwargs):
         return self.create_response(request, {})
     
     @dispatch
-    def list_hnd(self, request, **kwrags):
+    def list_hnd(self, request, **kwargs):
         return self.create_response(request, {})
     
     @dispatch("/change_max_duration/")
-    def change_max_duration_hnd(self, request, **kwrags):
+    def change_max_duration_hnd(self, request, **kwargs):
         return self.create_response(request, {})
 

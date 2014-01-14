@@ -40,7 +40,7 @@ class CloudCronResource(CloudResource):
         
         depends_on = None
         if "depends_on" in request.FILES:
-            depends_on = self.load_jids_from_request(request, "depends_on")
+            depends_on = self.load_jids_from_file(request, "depends_on")
             if not UserJobCounter.is_allocated(request.user, depends_on.top()):
                 return self.error_response(request, {"error": {"msg": "Sepcified dependency does not exist." , "code": 464, "retry": False}}, response_class=http.HttpRequest) 
 

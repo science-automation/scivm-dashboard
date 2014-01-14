@@ -23,31 +23,31 @@ class CloudFileResource(CloudResource):
         detail_allowed_methods = []
     
     @dispatch
-    def new_hnd(self, request, **kwrags):
+    def new_hnd(self, request, **kwargs):
         return self.create_response(request, {})
     
     @dispatch
-    def put_hnd(self, request, **kwrags):
+    def put_hnd(self, request, **kwargs):
         return self.create_response(request, {})
     
     @dispatch
-    def list_hnd(self, request, **kwrags):
+    def list_hnd(self, request, **kwargs):
         return self.create_response(request, {})
     
     @dispatch
-    def get_hnd(self, request, **kwrags):
+    def get_hnd(self, request, **kwargs):
         return self.create_response(request, {})
     
     @dispatch
-    def exists_hnd(self, request, **kwrags):
+    def exists_hnd(self, request, **kwargs):
         return self.create_response(request, {})
 
     @dispatch
-    def md5_hnd(self, request, **kwrags):
+    def md5_hnd(self, request, **kwargs):
         return self.create_response(request, {})
     
     @dispatch
-    def delete_hnd(self, request, **kwrags):
+    def delete_hnd(self, request, **kwargs):
         return self.create_response(request, {})
     
 

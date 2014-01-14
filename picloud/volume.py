@@ -23,39 +23,39 @@ class CloudVolumeResource(CloudResource):
         detail_allowed_methods = []
     
     @dispatch
-    def list_hnd(self, request, **kwrags):
+    def list_hnd(self, request, **kwargs):
         return self.create_response(request, {})
     
     @dispatch
-    def create_hnd(self, request, **kwrags):
+    def create_hnd(self, request, **kwargs):
         return self.create_response(request, {})
     
     @dispatch
-    def mkdir_hnd(self, request, pk, **kwrags):
+    def mkdir_hnd(self, request, pk, **kwargs):
         return self.create_response(request, {})
     
     @dispatch
-    def sync_initiate_hnd(self, request, **kwrags):
+    def sync_initiate_hnd(self, request, **kwargs):
         return self.create_response(request, {})
     
     @dispatch
-    def sync_terminate_hnd(self, request, **kwrags):
+    def sync_terminate_hnd(self, request, **kwargs):
         return self.create_response(request, {})
     
     @dispatch
-    def delete_hnd(self, request, pk, **kwrags):
+    def delete_hnd(self, request, pk, **kwargs):
         return self.create_response(request, {})
     
     @dispatch
-    def check_release_hnd(self, request, pk, **kwrags):
+    def check_release_hnd(self, request, pk, **kwargs):
         return self.create_response(request, {})
     
     @dispatch
-    def ls_hnd(self, request, pk, **kwrags):
+    def ls_hnd(self, request, pk, **kwargs):
         return self.create_response(request, {})
     
     @dispatch
-    def rm_hnd(self, request, pk, **kwrags):
+    def rm_hnd(self, request, pk, **kwargs):
         return self.create_response(request, {})
     
 
