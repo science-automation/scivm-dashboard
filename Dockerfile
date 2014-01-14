@@ -1,35 +1,39 @@
-from ubuntu:12.04
-maintainer Shipyard Project "http://scivm-project.com"
-run echo "deb http://us.archive.ubuntu.com/ubuntu precise main universe" > /etc/apt/sources.list
-run apt-get update
-run apt-get install -y python-dev python-setuptools libxml2-dev libxslt-dev libmysqlclient-dev supervisor redis-server git-core wget make g++ libreadline-dev libncurses5-dev libpcre3-dev  libpq-dev libmysqlclient-dev
-run wget http://nodejs.org/dist/v0.8.26/node-v0.8.26.tar.gz -O /tmp/node.tar.gz
-run (cd /tmp && tar zxf node.tar.gz && cd node-* && ./configure ; make install)
-run npm install git+http://github.com/ehazlett/hipache.git -g
-run wget http://openresty.org/download/ngx_openresty-1.4.2.9.tar.gz -O /tmp/nginx.tar.gz
-run (cd /tmp && tar zxf nginx.tar.gz && cd ngx_* && ./configure --with-luajit && make && make install)
-env SHIPYARD_APP_DIR /opt/apps/scivm
-env SHIPYARD_VE_DIR /opt/ve/scivm
+FROM ubuntu:12.04
+MAINTAINER Science Automation "http://www.scivm.com"
+RUN echo "deb ftp://mirror.hetzner.de/ubuntu/packages precise main restricted universe multiverse" > /etc/apt/sources.list
+RUN apt-get update
+RUN apt-get upgrade -y
+
+# base software
+run apt-get install -y python-dev python-setuptools python-software-properties libxml2-dev libxslt-dev libmysqlclient-dev supervisor redis-server git-core wget make g++ libreadline-dev libncurses5-dev libpcre3-dev  libpq-dev libmysqlclient-dev dialog net-tools lynx vim-tiny nano openssh-server git curl
+
+# ssh server
+RUN apt-get -y install openssh-server
+RUN mkdir -p /var/run/sshd
+RUN locale-gen en_US en_US.UTF-8
+
+# nginx
+RUN add-apt-repository -y ppa:nginx/stable
+RUN apt-get update
+RUN apt-get -y install nginx
+
+env SCIVM_APP_DIR /opt/apps/scivm-dashboard
+env SCIVM_VE_DIR /opt/ve/scivm-dashboard
 run easy_install pip
+run pip install setuptools --no-use-wheel --upgrade
 run pip install virtualenv
 run pip install uwsgi
-run virtualenv --no-site-packages $SHIPYARD_VE_DIR
-run $SHIPYARD_VE_DIR/bin/pip install MySQL-Python==1.2.3
-run $SHIPYARD_VE_DIR/bin/pip install psycopg2
-add . $SHIPYARD_APP_DIR
-add .docker/known_hosts /root/.ssh/known_hosts
-run (find $SHIPYARD_APP_DIR -name "*.db" -delete)
-run (cd $SHIPYARD_APP_DIR && git remote rm origin)
-run (cd $SHIPYARD_APP_DIR && git remote add origin https://github.com/scivm/scivm.git)
-run $SHIPYARD_VE_DIR/bin/pip install -r $SHIPYARD_APP_DIR/requirements.txt
-run (cd $SHIPYARD_APP_DIR && $SHIPYARD_VE_DIR/bin/python manage.py syncdb --noinput)
-run (cd $SHIPYARD_APP_DIR && $SHIPYARD_VE_DIR/bin/python manage.py migrate)
-run (cd $SHIPYARD_APP_DIR && $SHIPYARD_VE_DIR/bin/python manage.py update_admin_user --username=admin --password=scivm)
+run mkdir -p /opt/apps; cd /opt/apps; git clone https://github.com/science-automation/scivm-dashboard.git
+run virtualenv --no-site-packages $SCIVM_VE_DIR
+run $SCIVM_VE_DIR/bin/pip install MySQL-Python==1.2.3
+run $SCIVM_VE_DIR/bin/pip install psycopg2
+run (find $SCIVM_APP_DIR -name "*.db" -delete)
+run $SCIVM_VE_DIR/bin/pip install -r $SCIVM_APP_DIR/requirements.txt
 
-volume /var/log/scivm
-expose 80
-expose 443
-expose 6379
-expose 8000
-workdir /opt/apps/scivm
-entrypoint ["/opt/apps/scivm/.docker/run.sh"]
+VOLUME /var/log/scivm-dashboard
+EXPOSE 22
+EXPOSE 80
+EXPOSE 443
+EXPOSE 6379
+EXPOSE 5000
+CMD ["/bin/sh", "-e", "/opt/apps/scivm-dashboard/.docker/run.sh"]
