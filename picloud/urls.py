@@ -1,6 +1,7 @@
 from tastypie.api import Api
 
-from .essential import CloudServerResource, CloudPackageResource, CloudModuleResource
+from .servers import CloudServerResource
+from .modules import CloudPackageResource, CloudModuleResource
 from .account import CloudAccountResource
 from .job import CloudJobResource
 from .bucket import CloudBucketResource
