@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load scivm %}
+
+{% block content %}
+<div class="panel panel-default">
+    <div class="panel-heading heading-large">
+        <span class="panel-title section-title">{% trans 'API Keys' %}</span>
+        <span class="section-toolbar">
+        </span>
+        <span class="pull-right">
+            <a href="{% url 'apikey.views.add_apikey' %}" class="btn btn-success btn-sm">{% trans 'Add' %}</a>
+        </span>
+    </div>
+    <div class="panel-body">
+        {% if apikeys %}
+        <table class="table table-hover table-bordered">
+            <thead>
+                <tr>
+                    <th>{% trans 'Id' %}</th>
+                    <th>{% trans 'Key' %}</th>
+                    <th>{% trans 'Enabled' %}</th>
+                    <th>{% trans 'Description' %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for h in apikeys %}
+                <tr>
+                    <td>{{h.id}}</td>
+                    <td>{{h.key}}</td>
+                    <td><span class="label label-{% if h.enabled %}success{% else %}danger{% endif %}">{{h.enabled}}</span></td>
+                    <td>{{h.description}}</td>
+                    <td>
+                        <div class="btn-group">
+                            <a href="#" data-toggle="dropdown">
+                                <span class="glyphicon glyphicon-cog"></span>
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu right">
+                                <li><a href="#" class="edit-apikey" data-url="{% url 'apikey.views.edit_apikey' apikey_id=h.id %}">{% trans 'Edit Description' %}</a></li>
+                                {% if h.enabled %}
+                                <li><a href="#" class="disable-apikey" data-url="{% url 'apikey.views.disable_apikey' apikey_id=h.id %}">{% trans 'Disable Key' %}</a></li>
+                                {% else %}
+                                <li><a href="#" class="enable-apikey" data-url="{% url 'apikey.views.enable_apikey' apikey_id=h.id %}">{% trans 'Enable Key' %}</a></li>
+                                {% endif %}
+                                <li><a href="#" class="remove-apikey" data-url="{% url 'apikey.views.remove_apikey' apikey_id=h.id %}">{% trans 'Remove Key' %}</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="text-muted">{% trans 'No API Keys' %}</div>
+        {% endif %}
+    </div>
+</div>
+{% include "apikey/_common.html" %}
+<script type="text/javascript">
+</script>
+{% endblock %}

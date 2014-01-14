@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load scivm %}
+
+{% block content %}
+<div class="panel panel-default">
+    <div class="panel-heading heading-large">
+        <span class="panel-title section-title">{% trans 'Cloud Preference' %}</span>
+        <span class="section-toolbar">
+        </span>
+    </div>
+    <div class="panel-body">
+        <div class="text-muted">{% trans 'Preference of Cloud and Region' %}</div>
+    </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading heading-large">
+        <span class="panel-title section-title">{% trans 'Amazon' %}</span>
+        <span class="section-toolbar">
+        </span>
+    </div>
+    <div class="panel-body">
+        <div class="text-muted">{% trans 'Settings for Amazon EC2' %}</div>
+    </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading heading-large">
+        <span class="panel-title section-title">{% trans 'Google Compute Engine' %}</span>
+        <span class="section-toolbar">
+        </span>
+    </div>
+    <div class="panel-body">
+        <div class="text-muted">{% trans 'Settings for Google Compute Engine' %}</div>
+    </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading heading-large">
+        <span class="panel-title section-title">{% trans 'Email Preferences' %}</span>
+        <span class="section-toolbar">
+        </span>
+    </div>
+    <div class="panel-body">
+        <div class="text-muted">{% trans 'Instructions for Mac Installation' %}</div>
+    </div>
+</div>
+{% include "settings/_common.html" %}
+<script type="text/javascript">
+</script>
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load scivm %}
+
+{% block content %}
+<div class="panel panel-default">
+    <div class="panel-heading heading-large">
+        <span class="panel-title section-title">{% trans 'Crons' %}</span>
+        <span class="section-toolbar">
+        </span>
+        <span class="pull-right">
+            <a href="{% url 'crons.views.add_cron' %}" class="btn btn-success btn-sm">{% trans 'Add' %}</a>
+        </span>
+    </div>
+    <div class="panel-body">
+        {% if crons %}
+        <table class="table table-hover table-bordered">
+            <thead>
+                <tr>
+                    <th>{% trans 'Name' %}</th>
+                    <th>{% trans 'Schedule' %}</th>
+                    <th>{% trans 'Function' %}</th>
+                    <th>{% trans 'Enabled' %}</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for h in crons %}
+                <tr>
+                    <td>{{h.label}}</td>
+                    <td>{{h.cron_exp}}</td>
+                    <td>{{h.func_name}}</td>
+                    <td><span class="label label-{% if h.enabled %}success{% else %}danger{% endif %}">{{h.enabled}}</span></td>
+                    <td>
+                        <div class="btn-group">
+                            <a href="#" data-toggle="dropdown">
+                                <span class="glyphicon glyphicon-cog"></span>
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu right">
+                                {% if h.enabled %}
+                                <li><a href="#" class="disable-cron" data-url="{% url 'crons.views.disable_cron' cron_id=h.id %}">{% trans 'Disable Cron' %}</a></li>
+                                {% else %}
+                                <li><a href="#" class="enable-cron" data-url="{% url 'crons.views.enable_cron' cron_id=h.id %}">{% trans 'Enable Cron' %}</a></li>
+                                {% endif %}
+                                <li><a href="#" class="remove-cron" data-url="{% url 'crons.views.remove_cron' cron_id=h.id %}">{% trans 'Remove Cron' %}</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="text-muted">{% trans 'No crons' %}</div>
+        {% endif %}
+    </div>
+</div>
+{% include "crons/_common.html" %}
+<script type="text/javascript">
+</script>
+{% endblock %}

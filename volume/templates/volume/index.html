@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load scivm %}
+
+{% block content %}
+<div class="panel panel-default">
+    <div class="panel-heading heading-large">
+        <span class="panel-title section-title">{% trans 'Volumes' %}</span>
+        <span class="section-toolbar">
+        </span>
+    </div>
+    <div class="panel-body">
+        {% if volumes %}
+        <table class="table table-hover table-bordered">
+            <thead>
+                <tr>
+                    <th>{% trans 'Name' %}</th>
+                    <th>{% trans 'Description' %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for h in volumes %}
+                <tr>
+                    <td>{{h.name}}</td>
+                    <td>{{h.description}}</td>
+                    <td>
+                        <div class="btn-group">
+                            <a href="#" data-toggle="dropdown">
+                                <span class="glyphicon glyphicon-cog"></span>
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu right">
+                                <li><a href="#" class="snapshot-volume" data-url="{% url 'volume.views.snapshot_volume' volume_id=h.id %}">{% trans 'Take Snapshot' %}</a></li>
+                                <li><a href="#" class="remove-volume" data-url="{% url 'volume.views.remove_volume' volume_id=h.id %}">{% trans 'Remove Volume' %}</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="text-muted">{% trans 'No volumes' %}</div>
+        {% endif %}
+    </div>
+</div>
+{% include "volume/_common.html" %}
+<script type="text/javascript">
+</script>
+{% endblock %}

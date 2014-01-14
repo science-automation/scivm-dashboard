@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load scivm %}
+
+{% block content %}
+<div class="panel panel-default">
+    <div class="panel-heading heading-large">
+        <span class="panel-title section-title">{% trans 'Payment' %}</span>
+        <span class="section-toolbar">
+        </span>
+    </div>
+    <div class="panel-body">
+        <div class="text-muted">{% trans 'Payment Not Enabled' %}</div>
+    </div>
+</div>
+{% include "payment/_common.html" %}
+<script type="text/javascript">
+</script>
+{% endblock %}

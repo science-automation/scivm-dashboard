@@ -1,0 +1,16 @@
+*.pyc
+*.sw*
+*.un*
+local_settings.py
+*.log
+newrelic.ini
+*.egg-info/*
+*build/*
+*dist/*
+.vagrant*
+*.gz
+*.db
+supervisord.pid
+static_root/*
+.docker/nginx.conf
+fix

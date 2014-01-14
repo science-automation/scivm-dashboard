@@ -1,0 +1,163 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>{{APP_NAME}}{% block title %}{% endblock %}</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="">
+  <meta name="csrf-token" content="{{csrf_token}}">
+
+  <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <!-- styles -->
+  <link href="{{STATIC_URL}}css/bootstrap.min.css" rel="stylesheet">
+  <link href="{{STATIC_URL}}css/fonts.css" rel="stylesheet">
+  <link href="{{STATIC_URL}}css/app.css" rel="stylesheet">
+  <link href="{{STATIC_URL}}css/bootstrap-switch.css" rel="stylesheet">
+  <link href="{{STATIC_URL}}css/flat-ui-fonts.css" rel="stylesheet">
+  <link href="{{STATIC_URL}}css/font-awesome.css" rel="stylesheet"> 
+  <!-- <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet"> -->
+
+  {% block extra_head_css %}{% endblock %}
+
+  <!-- fav and touch icons -->
+  <link rel="shortcut icon" href="{{STATIC_URL}}img/favicon.ico">
+  <!-- scripts -->
+  <script type="text/javascript" src="{{STATIC_URL}}js/jquery.min.js"></script>
+  <script type="text/javascript" src="{{STATIC_URL}}js/jquery.validate.min.js"></script>
+  <script type="text/javascript" src="{{STATIC_URL}}js/bootstrap-switch.min.js"></script>
+  {% block extra_head_js %}{% endblock %}
+</head>
+<body>
+    <div id="messages" {% if not messages %}class="hide"{% endif %}>
+      {% if messages %}
+      {% for message in messages %}
+      <div class="alert {% if message.tags %}alert-{{message.tags}}{% endif %}">
+        <a class="close" href="#" data-dismiss="alert">&times;</a>
+        <p>{{message}}<p>
+        </div>
+        {% endfor %}
+        <script type="text/javascript">
+        $(".alert").delay(5000).fadeOut();
+        </script>
+        {% endif %}
+    </div>
+    {% if request.user.is_authenticated %}
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+          <span class="sr-only">{% trans 'Toggle Navigation' %}</span>
+        </button>
+        <a class="navbar-brand" href="/"><img src="{{STATIC_URL}}img/app.png" /> Science VM</a>
+      </div>
+      <ul id="nav" class="nav navbar-nav navbar-right">
+        {% if request.user.id != None %}
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{request.user.username}} <b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            {% if request.user.is_superuser %}
+            <li><a href="/admin/" target="_sh_admin">{% trans 'administration' %}</a></li>
+            <li class="divider"></li>
+            {% endif %}
+            <li><a href="{% url "accounts.views.logout" %}">{% trans 'logout' %}</a></li>
+          </ul>
+        </li>
+        {% else %}
+        <li><a href="{% url "accounts.views.login" %}">{% trans 'login' %}</a></li>
+        {% endif %}
+      </ul>
+    </nav>
+    {% endif %}
+
+    {% block base_content %}
+    <div class="sidenav col-md-2">
+      <ul>
+        <li id="sidenav-start"><a href="{% url 'start.views.index' %}"><span class="fa fa-flag-checkered"></span>{% trans 'Start' %}</a></li>
+        <li id="sidenav-settings"><a href="{% url 'settings.views.index' %}"><span class="fa fa-wrench"></span>{% trans 'Settings' %}</a></li>
+        <li id="sidenav-jobs"><a href="{% url 'job-list' %}"><span class="fa fa-tachometer"></span>{% trans 'Jobs' %}</a></li>
+        <li id="sidenav-environments"><a href="{% url 'environment.views.index' %}"><span class="fa fa-sitemap"></span>{% trans 'Environments' %}</a></li>
+        <li id="sidenav-crons"><a href="{% url 'crons.views.index' %}"><span class="fa fa-clock-o"></span>{% trans 'Crons' %}</a></li>
+        <li id="sidenav-bucket"><a href="{% url 'bucket.views.index' %}"><span class="fa fa-cloud-upload"></span>{% trans 'Bucket' %}</a></li>
+        {% if request.user.is_superuser %}
+        <li id="sidenav-volume"><a href="{% url 'volume.views.index' %}"><span class="fa fa-hdd-o"></span>{% trans 'Volumes' %}</a></li>
+        {% endif %}
+        <li id="sidenav-apikey"><a href="{% url 'apikey.views.index' %}"><span class="fa fa-key"></span>{% trans 'API Keys' %}</a></li>
+        {% if MANAGED %}
+        <li id="sidenav-payment"><a href="{% url 'payment.views.index' %}"><span class="fa fa-shopping_cart"></span>{% trans 'Payment' %}</a></li>
+        {% endif %}
+        {% if MANAGED %}
+        <li id="sidenav-support"><a href="{% url 'support.views.index' %}"><span class="fa fa-medkit"></span>{% trans 'Support' %}</a></li>
+        {% endif %}
+        <li id="sidenav-docs"><a href="http://docs.scivm.com/contents.html"><span class="fa fa-book"></span>{% trans 'Documentation' %}</a></li>
+      </ul>
+    </div>
+    <div class="main-content col-md-10">
+      {% block content %}{% endblock %}
+    </div>
+    {% endblock %}
+    <!-- Start of footer -->
+    <div id="copyright" class="center">
+      <div class="container">
+         <div class="row">
+            <div class="col-12">
+              &copy; 2014 <a href="http://www.scivm.com">Science Automation</a>
+              - <a href="http://www.scivm.com/platform">Platform</a>
+              - <a href="http://www.scivm.com/company">Company</a>
+              - <a href="http://www.scivm.com/privacy">Privacy</a>
+              - <a href="http://www.scivm.com/terms">Terms</a>
+            </div>
+         </div>
+      </div>
+    </div>
+    <!-- End of footer -->
+
+    <!-- scripts -->
+    <script type="text/javascript" src="{{STATIC_URL}}js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="{{STATIC_URL}}js/app.js"></script>
+    <script type="text/javascript" src="{{STATIC_URL}}js/holder.js"></script>
+    {% block extra_js %}{% endblock %}
+    <script type="text/javascript">
+    $("a[data-toggle='tab']").on('shown', function(e) {
+      localStorage.setItem('lastTab', $(e.target).attr('href'));
+    });
+    $(function(){
+        $("[rel=tooltip]").tooltip();
+        $("[rel=popover]").popover();
+        {% if messages %}
+        $(".alert").alert();
+        {% endif %}
+        // select last tab (for bootstrap active tab persistence)
+        var lastTab = localStorage.getItem('lastTab');
+        if (lastTab) {
+            // only select if element exists ; otherwise clear localStorage
+            // to prevent loading in other page
+            var el = $("#nav-tabs a[href='"+lastTab+"']");
+            if (el.length) {
+                $(el).tab('show');
+            } else {
+                localStorage.removeItem('lastTab');
+            }
+        }
+    });
+    </script>
+    {% if GOOGLE_ANALYTICS_CODE %}
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', '{{GOOGLE_ANALYTICS_CODE}}']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+    {% endif %}
+  </body>
+  </html>

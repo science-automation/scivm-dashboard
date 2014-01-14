@@ -1,0 +1,35 @@
+{% load i18n %}
+
+<script type="text/javascript">
+    $(function() {
+        $("li#sidenav-apikey").addClass("active");
+    });
+    $("a.enable-apikey").click(function(){
+        if (confirm("{% trans 'Are you sure you want to enable this key?' %}")) {
+            var url = this.getAttribute('data-url');
+            redirect(url);
+        }
+        return false;
+    });
+    $("a.disable-apikey").click(function(){
+        if (confirm("{% trans 'Are you sure you want to disable this key?' %}")) {
+            var url = this.getAttribute('data-url');
+            redirect(url);
+        }
+        return false;
+    });
+    $("a.remove-apikey").click(function(){
+        if (confirm("{% trans 'Are you sure you want to remove this key?' %}")) {
+            var url = this.getAttribute('data-url');
+            redirect(url);
+        }
+        return false;
+    });
+    $("a.edit-apikey").click(function(){
+        if (confirm("{% trans 'Are you sure you want to edit this key?' %}")) {
+            var url = this.getAttribute('data-url');
+            redirect(url);
+        }
+        return false;
+    });
+</script>

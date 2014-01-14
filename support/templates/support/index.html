@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load scivm %}
+
+{% block content %}
+<div class="panel panel-default">
+    <div class="panel-heading heading-large">
+        <span class="panel-title section-title">{% trans 'Current Support Level:' %}</span>
+        <span class="section-toolbar">
+        </span>
+    </div>
+    <div class="panel-body">
+        <div class="text-muted">{% trans 'Basic' %}</div>
+    </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading heading-large">
+        <span class="panel-title section-title">{% trans 'Open Support Cases:' %}</span>
+        <span class="section-toolbar">
+        </span>
+    </div>
+    <div class="panel-body">
+        {% if hosts %}
+        <table class="table table-hover table-bordered">
+            <thead>
+                <tr>
+                    <th>{% trans 'Name' %}</th>
+                    <th>{% trans 'Hostname' %}</th>
+                    <th>{% trans 'Port' %}</th>
+                    <th>{% trans 'Enabled' %}</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for h in hosts %}
+                <tr>
+                    <td>{{h.name}}</td>
+                    <td>{{h.hostname}}</td>
+                    <td>{{h.port}}</td>
+                    <td><span class="label label-{% if h.enabled %}success{% else %}danger{% endif %}">{{h.enabled}}</span></td>
+                    <td>
+                        <div class="btn-group">
+                            <a href="#" data-toggle="dropdown">
+                                <span class="glyphicon glyphicon-cog"></span>
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu right">
+                                {% if h.enabled %}
+                                <li><a href="#" class="disable-host" data-url="{% url 'hosts.views.disable_host' host_id=h.id %}">{% trans 'Disable Host' %}</a></li>
+                                {% else %}
+                                <li><a href="#" class="enable-host" data-url="{% url 'hosts.views.enable_host' host_id=h.id %}">{% trans 'Enable Host' %}</a></li>
+                                {% endif %}
+                                <li><a href="#" class="remove-host" data-url="{% url 'hosts.views.remove_host' host_id=h.id %}">{% trans 'Remove Host' %}</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="text-muted">{% trans 'No Open Support Cases' %}</div>
+        {% endif %}
+    </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading heading-large">
+        <span class="panel-title section-title">{% trans 'Closed Support Cases:' %}</span>
+        <span class="section-toolbar">
+        </span>
+    </div>
+    <div class="panel-body">
+        <div class="text-muted">{% trans 'No Closed Support Cases' %}</div>
+    </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading heading-large">
+        <span class="glyph glyph-dog"></span>  </a><span class="panel-title section-title">{% trans 'Service Health:' %}</span>
+        <span class="section-toolbar">
+        </span>
+    </div>
+    <div class="panel-body">
+        <div class="text-muted">{% trans 'Job Submission' %}</div>
+        <div class="text-muted">{% trans 'Job Processing' %}</div>
+        <div class="text-muted">{% trans 'Images' %}</div>
+        <div class="text-muted">{% trans 'Bucket' %}</div>
+        <div class="text-muted">{% trans 'Crons' %}</div>
+        <div class="text-muted">{% trans 'Volumes' %}</div>
+    </div>
+</div>
+{% include "support/_common.html" %}
+<script type="text/javascript">
+</script>
+{% endblock %}

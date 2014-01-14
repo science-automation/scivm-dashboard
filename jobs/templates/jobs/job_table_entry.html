@@ -1,0 +1,10 @@
+<tr>
+    <td><a href="{% url "job-detail" job.id %}">{{ job.get_jid_display }}</a></td>
+    <td>{{ job.parent_id|default:"" }}</td>
+    <td>{{ job.apikey_id }}</td>
+    <td>{{ job.hostname }}</td>
+    <td>{{ job.func_name }}</td>
+    <td>{{ job.label }}</td>
+    <td>{{ job.created_at|date:"Y-m-d H:i:s" }}</td>
+    <td>{{ job.get_status_display }}</td>
+</tr>

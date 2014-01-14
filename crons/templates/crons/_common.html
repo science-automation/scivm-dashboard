@@ -1,0 +1,28 @@
+{% load i18n %}
+
+<script type="text/javascript">
+    $(function() {
+        $("li#sidenav-crons").addClass("active");
+    });
+    $("a.enable-cron").click(function(){
+        if (confirm("{% trans 'Are you sure you want to enable the cron?' %}")) {
+            var url = this.getAttribute('data-url');
+            redirect(url);
+        }
+        return false;
+    });
+    $("a.disable-cron").click(function(){
+        if (confirm("{% trans 'Are you sure you want to disable the cron?' %}")) {
+            var url = this.getAttribute('data-url');
+            redirect(url);
+        }
+        return false;
+    });
+    $("a.remove-cron").click(function(){
+        if (confirm("{% trans 'Are you sure you want to remove the cron?' %}")) {
+            var url = this.getAttribute('data-url');
+            redirect(url);
+        }
+        return false;
+    });
+</script>

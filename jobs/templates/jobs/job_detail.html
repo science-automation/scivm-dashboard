@@ -1,0 +1,219 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load scivm %}
+
+{% block content %}
+<div class="panel panel-default">
+    <div class="panel-heading heading-large">
+        <span class="panel-title section-title">{% trans 'Jobs' %}</span>
+        <span class="section-toolbar">
+        </span>
+    </div>
+    <div class="panel-body">
+        <table class="table table-hover table-bordered">
+            <thead>
+                <tr>
+                    <th>{% trans 'id' %}</th>
+                    <th>{% trans 'parent' %}</th>
+                    <th>{% trans 'key' %}</th>
+                    <th>{% trans 'hostname' %}</th>
+                    <th>{% trans 'function' %}</th>
+                    <th>{% trans 'label' %}</th>
+                    <th>{% trans 'created' %}</th>
+                    <th>{% trans 'status' %}</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            {% include "jobs/job_table_entry.html" %}
+            </tbody>
+        </table>
+        {% if subjobs_paginator %}
+        <table class="table table-hover table-bordered">
+            <thead>
+                <tr>
+                    <th>{% trans 'id' %}</th>
+                    <th>{% trans 'parent' %}</th>
+                    <th>{% trans 'key' %}</th>
+                    <th>{% trans 'hostname' %}</th>
+                    <th>{% trans 'function' %}</th>
+                    <th>{% trans 'label' %}</th>
+                    <th>{% trans 'created' %}</th>
+                    <th>{% trans 'status' %}</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for subjob in subjobs_page.object_list %}
+                {% with job=subjob %}
+                {% include "jobs/job_table_entry.html" %}
+                {% endwith %}
+            {% endfor %}
+            </tbody>
+        </table>
+            {% if subjobs_paginator.num_pages > 1 %}
+        <div class="pagination">
+            <span class="step-links">
+                {% if subjobs_page.has_previous %}
+                <a href="?page={{ subjobs_page.previous_page_number }}">previous</a>
+                {% endif %}
+
+                <span class="current">
+                Page {{ subjobs_page.number }} of {{ subjobs_paginator.num_pages }}.
+                </span>
+
+                {% if subjobs_page.has_next %}
+                <a href="?page={{ subjobs_page.next_page_number }}">next</a>
+                {% endif %}
+            </span>
+        </div>
+            {% endif %}
+        {% else %}
+        <table class="table table-hover table-bordered">
+            <tbody>
+                <tr>
+                    <th>{% trans "Id" %}</th>
+                    <td>{{ job.jid }}</td>
+                </tr> 
+                <tr>
+                    <th>{% trans "Status" %}</th>
+                    <td>{{ job.get_status_display }}</td>
+                </tr> 
+                <tr>
+                    <th collspan=2>{% trans "Created by" %}</th>
+                </tr> 
+                <tr>
+                    <th>{% trans "Api Key" %}</th>
+                    <td>{{ job.apikey_id }}</td>
+                </tr> 
+                <tr>
+                    <th>{% trans "Hostname" %}</th>
+                    <td>{{ job.hostname }}</td>
+                </tr> 
+                <tr>
+                    <th collspan=2>{% trans "Job attributes" %}</th>
+                </tr> 
+                <tr>
+                    <th>{% trans "Function" %}</th>
+                    <td>{{ job.func_name }}</td>
+                </tr> 
+                <tr>
+                    <th>{% trans "Code version" %}</th>
+                    <td>{{ job.ap_version }}</td>
+                </tr> 
+                <tr>
+                    <th>{% trans "Environment" %}</th>
+                    <td>FIXME</td>
+                </tr> 
+                <tr>
+                    <th>{% trans "Volumes" %}</th>
+                    <td>FIXME</td>
+                </tr> 
+                <tr>
+                    <th>{% trans "Label" %}</th>
+                    <td>{{ job.label }}</td>
+                </tr> 
+                <tr>
+                    <th>{% trans "Core Type" %}</th>
+                    <td>{{ job.core_type }}</td>
+                </tr> 
+                <tr>
+                    <th>{% trans "Cores" %}</th>
+                    <td>{{ job.cores }}</td>
+                </tr> 
+                <tr>
+                    <th>{% trans "Depends On" %}</th>
+                    <td>{{ job.depends_on.as_python }}</td>
+                </tr> 
+                <tr>
+                    <th>{% trans "Dependent on by" %}</th>
+                    <td>FIXME</td>
+                </tr> 
+                <tr>
+                    <th>{% trans "Max runtime" %}</th>
+                    <td>{{ job.max_runtime }}</td>
+                </tr> 
+                <tr>
+                    <th collspan=2>{% trans "Job stats" %}</th>
+                </tr> 
+                <tr>
+                    <th>{% trans "Created" %}</th>
+                    <td>{{ job.created_at|date:"Y-m-d H:i:s" }} </td>
+                </tr> 
+                <tr>
+                    <th>{% trans "Finished" %}</th>
+                    <td>{{ job.finished_at|date:"Y-m-d H:i:s" }}</td>
+                </tr> 
+                <tr>
+                    <th>{% trans "Runtime" %}</th>
+                    <td>{{ job.runtime }}</td>
+                </tr> 
+                <tr>
+                    <th>{% trans "User CPU Time" %}</th>
+                    <td>FIXME</td>
+                </tr> 
+                <tr>
+                    <th>{% trans "Sys CPU Time" %}</th>
+                    <td>FIXME</td>
+                </tr> 
+                <tr>
+                    <th>{% trans "Peak Memory" %}</th>
+                    <td>FIXME</td>
+                </tr> 
+                <tr>
+                    <th>{% trans "Peak Swap" %}</th>
+                    <td>FIXME</td>
+                </tr> 
+                <tr>
+                    <th>{% trans "MemAlloc Fails" %}</th>
+                    <td>FIXME</td>
+                </tr> 
+                <tr>
+                    <th>{% trans "Listening Ports" %}</th>
+                    <td>FIXME</td>
+                </tr> 
+                <tr>
+                    <th collspan=2>{% trans "Job outputs" %}</th>
+                </tr> 
+                <tr>
+                    <th>{% trans "Exception" %}</th>
+                    <td>{% if job.exception %}{{ job.exception }}{% else %}{% trans "None" %}{% endif %}</td>
+                </tr> 
+                <tr>
+                    <th>{% trans "Result" %}</th>
+                    <td>{{ job.result }}</td>
+                </tr> 
+                <tr>
+                    <th>{% trans "Standard Output" %}</th>
+                    <td>FIXME</td>
+                </tr> 
+                <tr>
+                    <th>{% trans "Standard Error" %}</th>
+                    <td>FIXME</td>
+                </tr> 
+                <tr>
+                    <th>{% trans "Logging" %}</th>
+                    <td>FIXME</td>
+                </tr> 
+                <tr>
+                    <th>{% trans "Sci log" %}</th>
+                    <td>FIXME</td>
+                </tr> 
+                <tr>
+                    <th>{% trans "Syslog" %}</th>
+                    <td>FIXME</td>
+                </tr> 
+                <tr>
+                    <th>{% trans "Profile" %}</th>
+                    <td>FIXME</td>
+                </tr> 
+            </tbody>
+        </table>
+        {% endif %}
+
+    </div>
+</div>
+{% include "jobs/_common.html" %}
+<script type="text/javascript">
+</script>
+{% endblock %}
