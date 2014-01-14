@@ -123,6 +123,38 @@ stderr_logfile=/var/log/scivm-dashboard/redis.err
 EOF
 fi
 
+if [ -z "$APP_COMPONENTS" ] ; then
+    cat << EOF >> $SUPERVISOR_CONF
+[program:gevent_worker]
+priority=90
+directory=/opt/apps/scivm-dashboard
+command=/opt/ve/scivm-dashboard/bin/python manage.py celery worker -E -P gevent -c 1000
+user=root
+autostart=true
+autorestart=true
+stdout_logfile=/var/log/scivm-dashboard/gevent_worker.log
+stderr_logfile=/var/log/scivm-dashboard/gevent_worker.err
+
+EOF
+fi
+
+if [ -z "$APP_COMPONENTS" ] ; then
+    cat << EOF >> $SUPERVISOR_CONF
+[program:consume_job_results]
+priority=91
+directory=/opt/apps/scivm-dashboard
+command=/opt/ve/scivm-dashboard/bin/python manage.py consume_job_results
+user=root
+autostart=true
+autorestart=true
+stdout_logfile=/var/log/scivm-dashboard/consume_job_results.log
+stderr_logfile=/var/log/scivm-dashboard/consume_job_results.err
+
+EOF
+fi
+
+
+
 if [ -z "$APP_COMPONENTS" ] || [ ! -z "`echo $APP_COMPONENTS | grep master-worker`" ] ; then
     cat << EOF >> $SUPERVISOR_CONF
 [program:master-worker]
