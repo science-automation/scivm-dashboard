@@ -38,3 +38,8 @@ These extra steps needed to be able to use the scicloud api:
 * `python manage.py celery worker -E -P gevent -c 1000`
 * `python manage.py consume_job_results`
 * `python picloud/backends/modman_service.py` # see more in picloud/backends/conf.py
+
+# Screenshots
+
+![Jobs](https://www.scivm.com/sciencevm.png)
+
