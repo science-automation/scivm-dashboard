@@ -41,5 +41,5 @@ These extra steps needed to be able to use the scicloud api:
 
 # Screenshots
 
-![Jobs](https://www.scivm.com/sciencevm.png)
+![Jobs](https://www.scivm.com/static/img/sciencevm.png)
 
