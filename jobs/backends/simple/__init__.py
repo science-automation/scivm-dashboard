@@ -22,7 +22,7 @@ logger = logging.getLogger("jobs.backends.simple")
 
 ANY_STATUS = "_any_status_"
 
-rcli = redis.StrictRedis()
+rcli = redis.StrictRedis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=settings.REDIS_DB)
 
 @celery.task(name="simple.update_job_status")
 def update_job_status(job_data, from_, to, extra_data=None):

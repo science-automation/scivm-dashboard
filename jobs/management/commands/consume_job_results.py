@@ -6,12 +6,13 @@ from jobs.models import Job
 import redis
 import zlib
 import pickle
+from django.conf import settings
 
 class Command(BaseCommand):
     help = 'Consum custom job result queue'
 
     def handle(self, *args, **options):
-        rcli = redis.StrictRedis(host="localhost", port=6379, db=0)
+        rcli = redis.StrictRedis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=settings.REDIS_DB)
         while True:
             queue, data = rcli.blpop("noq.jobs.finished")
             try:
