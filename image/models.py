@@ -13,7 +13,7 @@ class Image(models.Model):
     image_id = models.CharField(max_length=96, null=True, blank=True)
     name = models.CharField(max_length=96, null=True, blank=True)
     owner = models.ForeignKey(User, unique=True)
-    description  = models.TextField(max_length=96, null=True, blank=True)
+    description = models.TextField(default="", blank=True)
     created = models.DateTimeField(auto_now_add=True)
     lastmodified = models.DateTimeField(auto_now_add=True)
     public = models.BooleanField(null=False, default=False)
