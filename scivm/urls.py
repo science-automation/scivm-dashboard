@@ -21,6 +21,7 @@ from jobs.api import JobResource
 from volume.api import VolumeResource
 from bucket.api import BucketResource
 from environment.api import EnvironmentResource
+from image.api import ImageResource
 from picloud.urls import cloud_api
 
 v1_api = Api(api_name='v1')
@@ -29,6 +30,7 @@ v1_api.register(JobResource())
 v1_api.register(VolumeResource())
 v1_api.register(BucketResource())
 v1_api.register(EnvironmentResource())
+v1_api.register(ImageResource())
 
 
 urlpatterns = patterns('',
@@ -48,4 +50,5 @@ urlpatterns = patterns('',
     url(r'^settings/', include('settings.urls')),
     url(r'^crons/', include('crons.urls')),
     url(r'^environment/', include('environment.urls')),
+    url(r'^image/', include('image.urls')),
 )

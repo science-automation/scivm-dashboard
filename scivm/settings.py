@@ -172,6 +172,7 @@ INSTALLED_APPS = (
     'settings',
     'crons',
     'environment',
+    'image',
 )
 
 # A sample logging configuration. The only tangible logging

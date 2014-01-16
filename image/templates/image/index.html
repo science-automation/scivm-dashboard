@@ -3,7 +3,7 @@
 {% load scivm %}
 
 {% block content %}
-<div id="dialog-import-environment" class="modal">
+<div id="dialog-import-image" class="modal">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -11,7 +11,7 @@
                 <h4 class="modal-title">{% trans 'Import' %}</h4>
             </div>
             <div class="modal-body">
-                <form id="form-import-environment" role="form" action="{% url 'environment.views.import_image' %}" method="post">
+                <form id="form-import-image" role="form" action="{% url 'image.views.import_image' %}" method="post">
                     {% csrf_token %}
                     <div class="form-group">
                           <input class="form-control" name="repo_name" type="text" placeholder="{% trans 'i.e. scivm/python2.7' %}" autofocus="true">
@@ -32,7 +32,7 @@
                 <h4 class="modal-title">{% trans 'Build' %}</h4>
             </div>
             <div class="modal-body">
-                <form id="form-build-image" role="form" action="{% url 'environment.views.build_image' %}" method="post">
+                <form id="form-build-image" role="form" action="{% url 'image.views.build_image' %}" method="post">
                     {% csrf_token %}
                     <div class="form-group">
                           <label class="sr-only" for="path">{% trans 'Path' %}</label>
@@ -56,12 +56,12 @@
     <div class="panel-heading heading-large">
         <span class="panel-title section-title">{% trans 'Environments' %}</span>
         <span class="pull-right">
-            <a href="#dialog-import-environment" id="import-environment" class="btn btn-success btn-sm" data-toggle="modal">{% trans 'Import' %}</a>
+            <a href="#dialog-import-image" id="import-image" class="btn btn-success btn-sm" data-toggle="modal">{% trans 'Import' %}</a>
             <a href="#dialog-build-image" id="build-image" class="btn btn-success btn-sm" data-toggle="modal">{% trans 'Build' %}</a>
         </span>
     </div>
     <div class="panel-body">
-        {% if environment %}
+        {% if image %}
         <table class="table table-hover table-bordered">
             <thead>
                 <tr>
@@ -74,17 +74,17 @@
             </thead>
         </table>
         {% else %}
-        <div class="text-muted">{% trans 'No environments' %}</div>
+        <div class="text-muted">{% trans 'No images' %}</div>
         {% endif %}
     </div>
 </div>
-{% include "environment/_common.html" %}
+{% include "image/_common.html" %}
 <script type="text/javascript">
     $("#btn-build").click(function(){
         $("#form-build-image").submit();
     });
     $("#btn-import").click(function(){
-        $("#form-import-environment").submit();
+        $("#form-import-image").submit();
     });
 </script>
 {% endblock %}
