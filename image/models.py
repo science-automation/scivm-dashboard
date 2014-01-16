@@ -11,7 +11,7 @@ from scivm import utils
 class Image(models.Model):
 #    environment_id = models.ForeignKey('Environment')
     image_id = models.CharField(max_length=96, null=True, blank=True)
-    name = models.CharField(max_length=96, null=True, blank=True)
+    name = models.CharField(max_length=256, null=False, blank=False)
     owner = models.ForeignKey(User)
     description = models.TextField(default="", blank=True)
     created = models.DateTimeField(auto_now_add=True)
