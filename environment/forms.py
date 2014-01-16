@@ -15,6 +15,7 @@ class EnvironmentForm(forms.ModelForm):
                 None,
                 'name',
                 'description',
+                'public',
                 'owner',
             ),
             FormActions(
@@ -27,6 +28,6 @@ class EnvironmentForm(forms.ModelForm):
 
     class Meta:
         model = Environment
-        fields = ('name', 'description')
+        fields = ('name', 'description','public')
         exclude = ["owner"]
 
