@@ -9,7 +9,7 @@ from scivm import utils
 
 class Bucket(models.Model):
     name = models.CharField(max_length=96, null=True, blank=True)
-    owner = models.ForeignKey(User, null=True, blank=True)
+    owner = models.ForeignKey(User)
     description = models.TextField(default="", blank=True)
     created = models.DateTimeField(auto_now_add=True)
 
@@ -20,7 +20,7 @@ class Bucket(models.Model):
 
 class BucketFile(models.Model):
     bucket_id = models.ForeignKey('Bucket')
-    owner = models.ForeignKey(User, unique=True)    
+    owner = models.ForeignKey(User)    
     name = models.CharField(max_length=96, null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     lastmodified = models.DateTimeField(auto_now_add=True)

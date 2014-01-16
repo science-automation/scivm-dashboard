@@ -3,61 +3,13 @@
 {% load scivm %}
 
 {% block content %}
-<div id="dialog-import-environment" class="modal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">{% trans 'Import' %}</h4>
-            </div>
-            <div class="modal-body">
-                <form id="form-import-environment" role="form" action="{% url 'environment.views.import_image' %}" method="post">
-                    {% csrf_token %}
-                    <div class="form-group">
-                          <input class="form-control" name="repo_name" type="text" placeholder="{% trans 'i.e. scivm/python2.7' %}" autofocus="true">
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button id="btn-import" type="button" class="btn btn-primary">{% trans 'Import' %}</button>
-            </div>
-        </div>
-    </div>
-</div>
-<div id="dialog-build-image" class="modal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">{% trans 'Build' %}</h4>
-            </div>
-            <div class="modal-body">
-                <form id="form-build-image" role="form" action="{% url 'environment.views.build_image' %}" method="post">
-                    {% csrf_token %}
-                    <div class="form-group">
-                          <label class="sr-only" for="path">{% trans 'Path' %}</label>
-                          <input class="form-control" id="path" name="path" type="text" placeholder="{% trans 'i.e. github.com/science-automation/docker-py-helloworld' %}" autofocus="true">
-                    </div>
-                    <div class="form-group">
-                          <label class="sr-only" for="tag">{% trans 'Tag' %}</label>
-                          <input class="form-control" id="tag" name="tag" type="text" placeholder="{% trans 'i.e. helloworld' %}">
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button id="btn-build" type="button" class="btn btn-primary">{% trans 'Build' %}</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
 <div class="panel panel-default">
     <div class="panel-heading heading-large">
-        <span class="panel-title section-title">{% trans 'Environments' %}</span>
+        <span class="panel-title section-title">{% trans 'Environment' %}</span>
+        <span class="section-toolbar">
+        </span>
         <span class="pull-right">
-            <a href="#dialog-import-environment" id="import-environment" class="btn btn-success btn-sm" data-toggle="modal">{% trans 'Import' %}</a>
-            <a href="#dialog-build-image" id="build-image" class="btn btn-success btn-sm" data-toggle="modal">{% trans 'Build' %}</a>
+            <a href="{% url 'environment.views.add_environment' %}" class="btn btn-success btn-sm">{% trans 'Add' %}</a>
         </span>
     </div>
     <div class="panel-body">
@@ -65,13 +17,32 @@
         <table class="table table-hover table-bordered">
             <thead>
                 <tr>
-                    <th>{% trans 'ID' %}</th>
-                    <th>{% trans 'Repository' %}</th>
-                    <th>{% trans 'Tag' %}</th>
-                    <th>{% trans 'Host' %}</th>
+                    <th>{% trans 'Name' %}</th>
+                    <th>{% trans 'Description' %}</th>
                     <th></th>
                 </tr>
             </thead>
+            <tbody>
+                {% for h in environment %}
+                <tr>
+                    <td>{{h.label}}</td>
+                    <td>{{h.environment_exp}}</td>
+                    <td>{{h.func_name}}</td>
+                    <td><span class="label label-{% if h.enabled %}success{% else %}danger{% endif %}">{{h.enabled}}</span></td>
+                    <td>
+                        <div class="btn-group">
+                            <a href="#" data-toggle="dropdown">
+                                <span class="glyphicon glyphicon-cog"></span>
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu right">
+                                <li><a href="#" class="remove-environment" data-url="{% url 'environment.views.remove_environment' environment_id=h.id %}">{% trans 'Remove Environment' %}</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
         </table>
         {% else %}
         <div class="text-muted">{% trans 'No environments' %}</div>
@@ -80,11 +51,5 @@
 </div>
 {% include "environment/_common.html" %}
 <script type="text/javascript">
-    $("#btn-build").click(function(){
-        $("#form-build-image").submit();
-    });
-    $("#btn-import").click(function(){
-        $("#form-import-environment").submit();
-    });
 </script>
 {% endblock %}

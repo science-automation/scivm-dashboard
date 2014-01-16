@@ -2,10 +2,10 @@
 
 <script type="text/javascript">
     $(function() {
-        $("li#sidenav-images").addClass("active");
+        $("li#sidenav-environments").addClass("active");
     });
-    $("a.remove-image").click(function(){
-        if (confirm("{% trans 'Are you sure you want to remove the image?' %}")) {
+    $("a.remove-environment").click(function(){
+        if (confirm("{% trans 'Are you sure you want to remove the environment?' %}")) {
             var url = this.getAttribute('data-url');
             redirect(url);
         }

@@ -9,7 +9,7 @@ from scivm import utils
 
 class Environment(models.Model):
     name = models.CharField(max_length=96, null=True, blank=True)
-    owner = models.ForeignKey(User, unique=True)
+    owner = models.ForeignKey(User)
     description = models.TextField(default="", blank=True)
     created = models.DateTimeField(auto_now_add=True)
     public = models.BooleanField(null=False, default=False)
