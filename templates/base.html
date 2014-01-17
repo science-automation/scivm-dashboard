@@ -83,7 +83,10 @@
         <li id="sidenav-jobs"><a href="{% url 'job-list' %}"><span class="fa fa-tachometer"></span>{% trans 'Jobs' %}</a></li>
         <li id="sidenav-environments"><a href="{% url 'environment.views.index' %}"><span class="fa fa-sitemap"></span>{% trans 'Environments' %}</a></li>
         <li id="sidenav-crons"><a href="{% url 'crons.views.index' %}"><span class="fa fa-clock-o"></span>{% trans 'Crons' %}</a></li>
-        <li id="sidenav-bucket"><a href="{% url 'bucketfile.views.index' %}"><span class="fa fa-cloud-upload"></span>{% trans 'Bucket' %}</a></li>
+        <li id="sidenav-bucketfile"><a href="{% url 'bucketfile.views.index' %}"><span class="fa fa-cloud-upload"></span>{% trans 'Bucket' %}</a></li>
+        {% if request.user.is_superuser %}
+        <li id="sidenav-provider"><a href="{% url 'provider.views.index' %}"><span class="fa fa-cloud"></span>{% trans 'Cloud Provider' %}</a></li>
+        {% endif %}
         {% if request.user.is_superuser %}
         <li id="sidenav-bucketstore"><a href="{% url 'bucketstore.views.index' %}"><span class="fa fa-cloud"></span>{% trans 'Bucket Store' %}</a></li>
         {% endif %}

@@ -167,6 +167,7 @@ INSTALLED_APPS = (
     'support',
     'volume',
     'bucketfile',
+    'provider',
     'bucketstore',
     'payment',
     'start',

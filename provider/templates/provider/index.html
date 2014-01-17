@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load scivm %}
+
+{% block content %}
+<div class="panel panel-default">
+    <div class="panel-heading heading-large">
+        <span class="panel-title section-title">{% trans 'Cloud Provider' %}</span>
+        <span class="section-toolbar">
+        </span>
+        <span class="pull-right">
+            <a href="{% url 'provider.views.add_provider' %}" class="btn btn-success btn-sm">{% trans 'Add' %}</a>
+        </span>
+    </div>
+    <div class="panel-body">
+        {% if provider %}
+        <table class="table table-hover table-bordered">
+            <thead>
+                <tr>
+                    <th>{% trans 'Name' %}</th>
+                    <th>{% trans 'Description' %}</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for h in provider %}
+                <tr>
+                    <td>{{h.label}}</td>
+                    <td>{{h.provider_exp}}</td>
+                    <td>{{h.func_name}}</td>
+                    <td><span class="label label-{% if h.enabled %}success{% else %}danger{% endif %}">{{h.enabled}}</span></td>
+                    <td>
+                        <div class="btn-group">
+                            <a href="#" data-toggle="dropdown">
+                                <span class="glyphicon glyphicon-cog"></span>
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu right">
+                                <li><a href="#" class="remove-provider" data-url="{% url 'provider.views.remove_provider' provider_id=h.id %}">{% trans 'Remove Bucket Store' %}</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="text-muted">{% trans 'No provider' %}</div>
+        {% endif %}
+    </div>
+</div>
+{% include "provider/_common.html" %}
+<script type="text/javascript">
+</script>
+{% endblock %}

@@ -21,6 +21,7 @@ from jobs.api import JobResource
 from volume.api import VolumeResource
 from bucketfile.api import BucketFileResource
 from bucketstore.api import BucketStoreResource
+from provider.api import ProviderResource
 from environment.api import EnvironmentResource
 from image.api import ImageResource
 from picloud.urls import cloud_api
@@ -31,6 +32,7 @@ v1_api.register(JobResource())
 v1_api.register(VolumeResource())
 v1_api.register(BucketFileResource())
 v1_api.register(BucketStoreResource())
+v1_api.register(ProviderResource())
 v1_api.register(EnvironmentResource())
 v1_api.register(ImageResource())
 
@@ -48,6 +50,7 @@ urlpatterns = patterns('',
     url(r'^volume/', include('volume.urls')),
     url(r'^bucketfile/', include('bucketfile.urls')),
     url(r'^bucketstore/', include('bucketstore.urls')),
+    url(r'^provider/', include('provider.urls')),
     url(r'^payment/', include('payment.urls')),
     url(r'^start/', include('start.urls')),
     url(r'^settings/', include('settings.urls')),
