@@ -5,7 +5,7 @@
 {% block content %}
 <div class="panel panel-default">
     <div class="panel-heading heading-large">
-        <span class="panel-title section-title">{% trans 'Environment' %}</span>
+        <span class="panel-title section-title">{% trans 'My Environments' %}</span>
         <span class="section-toolbar">
         </span>
         <span class="pull-right">
@@ -29,7 +29,11 @@
                     <td>{{h.private}}</td>
                     <td>
                         <div class="btn-group">
-                                <a href="#" class="remove-environment" title="Delete" data-url="{% url 'environment.views.remove_environment' environment_id=h.id %}"><span class="glyphicon glyphicon-remove-sign"></span></a>
+                                <a href="#" class="modify-environment" title="Modify" data-url="{% url 'environment.views.modify_environment' environment_id=h.id %}"><span class="glyphicon glyphicon-wrench"></span></a>
+                                <a href="#" class="share-environment" title="Share" data-url="{% url 'environment.views.share_environment' environment_id=h.id %}"><span class="glyphicon glyphicon-user"></span></a>
+                                <a href="#" class="edit-environment" title="Edit" data-url="{% url 'environment.views.edit_info_environment' environment_id=h.id %}"><span class="glyphicon glyphicon-pencil"></span></a>
+                                <a href="#" class="clone-environment" title="Clone" data-url="{% url 'environment.views.clone_environment' environment_id=h.id %}"><span class="glyphicon glyphicon-th"></span></a>
+                                <a href="#" class="remove-environment" title="Delete" data-url="{% url 'environment.views.remove_environment' environment_id=h.id %}"><span class="glyphicon glyphicon-trash"></span></a>
                             </ul>
                         </div>
                     </td>
@@ -44,7 +48,7 @@
 </div>
 <div class="panel panel-default">
     <div class="panel-heading heading-large">
-        <span class="panel-title section-title">{% trans 'Environment' %}</span>
+        <span class="panel-title section-title">{% trans 'Public Environments' %}</span>
         <span class="section-toolbar">
         </span>
     </div>
@@ -65,7 +69,10 @@
                     <td>{{h.private}}</td>
                     <td>
                         <div class="btn-group">
-                            <a href="#" class="star-environment" title="star" data-url="{% url 'environment.views.star_environment' environment_id=h.id %}"><span class="glyphicon glyphicon-star"></span></a>
+                            <a href="#" class="star-environment" title="Star" data-url="{% url 'environment.views.star_environment' environment_id=h.id %}"><span class="glyphicon glyphicon-star"></span></a>
+                        </div>
+                        <div class="btn-group">
+                            <a href="#" class="clone-environment" title="Clone" data-url="{% url 'environment.views.clone_environment' environment_id=h.id %}"><span class="glyphicon glyphicon-th"></span></a>
                         </div>
                     </td>
                 </tr>

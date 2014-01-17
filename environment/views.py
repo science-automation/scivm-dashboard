@@ -49,6 +49,30 @@ def star_environment(request, environment_id):
     return redirect('environment.views.index')
 
 @login_required
+def clone_environment(request, environment_id):
+    h = Environment.objects.get(id=environment_id)
+    # clone the environment
+    return redirect('environment.views.index')
+
+@login_required
+def share_environment(request, environment_id):
+    h = Environment.objects.get(id=environment_id)
+    # clone the environment
+    return redirect('environment.views.index')
+
+@login_required
+def modify_environment(request, environment_id):
+    h = Environment.objects.get(id=environment_id)
+    # clone the environment
+    return redirect('environment.views.index')
+
+@login_required
+def edit_info_environment(request, environment_id):
+    h = Environment.objects.get(id=environment_id)
+    # edit the environments info
+    return redirect('environment.views.index')
+
+@login_required
 def import_image(request):
     repo = request.POST.get('repo_name')
     if repo:
