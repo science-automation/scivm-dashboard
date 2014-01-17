@@ -24,7 +24,6 @@ def add_bucketstore(request):
     form = BucketStoreForm()
     if request.method == 'POST':
         form = BucketStoreForm(request.POST)
-        form.owner = request.user
         if form.is_valid():
             ptype = form.save(commit=False)
             ptype.owner = request.user

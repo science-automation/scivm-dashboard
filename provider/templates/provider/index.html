@@ -29,12 +29,7 @@
                     <td>{{h.name}}</td>
                     <td>
                         <div class="btn-group">
-                            <a href="#" data-toggle="dropdown">
-                                <span class="glyphicon glyphicon-cog"></span>
-                                <span class="caret"></span>
-                            </a>
-                            <ul class="dropdown-menu right">
-                                <li><a href="#" class="remove-provider" data-url="{% url 'provider.views.remove_provider' provider_id=h.id %}">{% trans 'Remove Cloud Provider' %}</a></li>
+                                <a href="#" class="remove-provider" title="Delete" data-url="{% url 'provider.views.remove_provider' provider_id=h.id %}"><span class="glyphicon glyphicon-remove-sign"></span></a>
                             </ul>
                         </div>
                     </td>

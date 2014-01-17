@@ -15,7 +15,6 @@ class BucketStoreForm(forms.ModelForm):
                 None,
                 'name',
                 'description',
-                'owner',
             ),
             FormActions(
                 Submit('save', _('Add'), css_class="btn btn-lg btn-success"),
@@ -28,5 +27,4 @@ class BucketStoreForm(forms.ModelForm):
     class Meta:
         model = BucketStore
         fields = ('name', 'description')
-        exclude = ["owner"]
 

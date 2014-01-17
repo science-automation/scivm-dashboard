@@ -13,7 +13,7 @@
         </span>
     </div>
     <div class="panel-body">
-        {% if bucketstore %}
+        {% if bucketstores %}
         <table class="table table-hover table-bordered">
             <thead>
                 <tr>
@@ -23,25 +23,13 @@
                 </tr>
             </thead>
             <tbody>
-                {% for h in bucketstore %}
+                {% for h in bucketstores %}
                 <tr>
-                    <td>{{h.label}}</td>
-                    <td>{{h.bucketstore_exp}}</td>
-                    <td>{{h.func_name}}</td>
-                    <td><span class="label label-{% if h.enabled %}success{% else %}danger{% endif %}">{{h.enabled}}</span></td>
+                    <td>{{h.name}}</td>
+                    <td>{{h.description}}</td>
                     <td>
                         <div class="btn-group">
-                            <a href="#" data-toggle="dropdown">
-                                <span class="glyphicon glyphicon-cog"></span>
-                                <span class="caret"></span>
-                            </a>
-                            <ul class="dropdown-menu right">
-                                {% if h.enabled %}
-                                <li><a href="#" class="disable-bucketstore" data-url="{% url 'bucketstore.views.disable_bucketstore' bucketstore_id=h.id %}">{% trans 'Disable Bucket Store' %}</a></li>
-                                {% else %}
-                                <li><a href="#" class="enable-bucketstore" data-url="{% url 'bucketstore.views.enable_bucketstore' bucketstore_id=h.id %}">{% trans 'Enable Bucket Store' %}</a></li>
-                                {% endif %}
-                                <li><a href="#" class="remove-bucketstore" data-url="{% url 'bucketstore.views.remove_bucketstore' bucketstore_id=h.id %}">{% trans 'Remove Bucket Store' %}</a></li>
+                                <a href="#" class="remove-bucketstore" title="Delete" data-url="{% url 'bucketstore.views.remove_bucketstore' bucketstore_id=h.id %}"><span class="glyphicon glyphicon-remove-sign"></span></a>
                             </ul>
                         </div>
                     </td>
