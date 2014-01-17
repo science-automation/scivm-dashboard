@@ -7,7 +7,6 @@ from django.template import RequestContext
 from django.contrib import messages
 from django.utils.translation import ugettext as _
 from crons.models import Cron
-from crons.forms import CronForm
 
 @login_required
 def index(request):
@@ -17,23 +16,6 @@ def index(request):
         'crons': crons
     }
     return render_to_response('crons/index.html', ctx,
-        context_instance=RequestContext(request))
-
-@login_required
-def add_cron(request):
-    form = CronForm()
-    if request.method == 'POST':
-        form = CronForm(request.POST)
-        form.owner = request.user
-        if form.is_valid():
-            ptype = form.save(commit=False)
-            ptype.owner = request.user
-            ptype.save()
-            return redirect(reverse('crons.views.index'))
-    ctx = {
-        'form': form
-    }
-    return render_to_response('crons/add_cron.html', ctx,
         context_instance=RequestContext(request))
 
 @login_required
