@@ -24,7 +24,6 @@ def add_provider(request):
     form = ProviderForm()
     if request.method == 'POST':
         form = ProviderForm(request.POST)
-        form.owner = request.user
         if form.is_valid():
             ptype = form.save(commit=False)
             ptype.owner = request.user

@@ -15,7 +15,6 @@ class ProviderForm(forms.ModelForm):
                 None,
                 'name',
                 'description',
-                'owner',
             ),
             FormActions(
                 Submit('save', _('Add'), css_class="btn btn-lg btn-success"),
@@ -28,5 +27,3 @@ class ProviderForm(forms.ModelForm):
     class Meta:
         model = Provider
         fields = ('name', 'description')
-        exclude = ["owner"]
-

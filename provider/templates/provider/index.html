@@ -13,7 +13,7 @@
         </span>
     </div>
     <div class="panel-body">
-        {% if provider %}
+        {% if providers %}
         <table class="table table-hover table-bordered">
             <thead>
                 <tr>
@@ -23,12 +23,10 @@
                 </tr>
             </thead>
             <tbody>
-                {% for h in provider %}
+                {% for h in providers %}
                 <tr>
-                    <td>{{h.label}}</td>
-                    <td>{{h.provider_exp}}</td>
-                    <td>{{h.func_name}}</td>
-                    <td><span class="label label-{% if h.enabled %}success{% else %}danger{% endif %}">{{h.enabled}}</span></td>
+                    <td>{{h.name}}</td>
+                    <td>{{h.name}}</td>
                     <td>
                         <div class="btn-group">
                             <a href="#" data-toggle="dropdown">
@@ -36,7 +34,7 @@
                                 <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu right">
-                                <li><a href="#" class="remove-provider" data-url="{% url 'provider.views.remove_provider' provider_id=h.id %}">{% trans 'Remove Bucket Store' %}</a></li>
+                                <li><a href="#" class="remove-provider" data-url="{% url 'provider.views.remove_provider' provider_id=h.id %}">{% trans 'Remove Cloud Provider' %}</a></li>
                             </ul>
                         </div>
                     </td>
