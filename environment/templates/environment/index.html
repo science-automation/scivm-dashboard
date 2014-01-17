@@ -13,22 +13,20 @@
         </span>
     </div>
     <div class="panel-body">
-        {% if environment %}
+        {% if environments %}
         <table class="table table-hover table-bordered">
             <thead>
                 <tr>
                     <th>{% trans 'Name' %}</th>
-                    <th>{% trans 'Description' %}</th>
+                    <th>{% trans 'Owner' %}</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
-                {% for h in environment %}
+                {% for h in environments %}
                 <tr>
-                    <td>{{h.label}}</td>
-                    <td>{{h.environment_exp}}</td>
-                    <td>{{h.func_name}}</td>
-                    <td><span class="label label-{% if h.enabled %}success{% else %}danger{% endif %}">{{h.enabled}}</span></td>
+                    <td>{{h.name}}</td>
+                    <td>{{h.owner}}</td>
                     <td>
                         <div class="btn-group">
                             <a href="#" data-toggle="dropdown">

@@ -16,7 +16,6 @@ class EnvironmentForm(forms.ModelForm):
                 'name',
                 'description',
                 'public',
-                'owner',
             ),
             FormActions(
                 Submit('save', _('Add'), css_class="btn btn-lg btn-success"),
@@ -29,5 +28,3 @@ class EnvironmentForm(forms.ModelForm):
     class Meta:
         model = Environment
         fields = ('name', 'description','public')
-        exclude = ["owner"]
-

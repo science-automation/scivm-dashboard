@@ -25,7 +25,6 @@ def add_environment(request):
     form = EnvironmentForm()
     if request.method == 'POST':
         form = EnvironmentForm(request.POST)
-        form.owner = request.user
         if form.is_valid():
             ptype = form.save(commit=False)
             ptype.owner = request.user
