@@ -9,7 +9,7 @@ from bucketstore.models import BucketStore
 from scivm import utils
 
 class BucketFile(models.Model):
-#    bucket_id = models.ForeignKey('BucketStore')
+    bucket_id = models.ForeignKey(BucketStore)
     owner = models.ForeignKey(User)    
     name = models.CharField(max_length=96, null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
