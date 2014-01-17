@@ -13,9 +13,9 @@ from scivm import tasks
 @login_required
 def index(request):
     thisuser = User.objects.get(username=request.user.username)
-    environments = Environment.objects.filter(owner__pk=thisuser.pk)
     ctx = {
-        'environments': environments
+        'private_envs': Environment.objects.filter(owner__pk=thisuser.pk),
+        'public_envs': Environment.objects.filter(public=True),
     }
     return render_to_response('environment/index.html', ctx,
         context_instance=RequestContext(request))
@@ -40,8 +40,12 @@ def add_environment(request):
 def remove_environment(request, environment_id):
     h = Environment.objects.get(id=environment_id)
     h.delete()
-    messages.add_message(request, messages.INFO, _('Removed') + ' {0}'.format(
-        h.name))
+    return redirect('environment.views.index')
+
+@login_required
+def star_environment(request, environment_id):
+    h = Environment.objects.get(id=environment_id)
+    # give the environment a star
     return redirect('environment.views.index')
 
 @login_required

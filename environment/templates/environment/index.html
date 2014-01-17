@@ -13,28 +13,23 @@
         </span>
     </div>
     <div class="panel-body">
-        {% if environments %}
+        {% if private_envs %}
         <table class="table table-hover table-bordered">
             <thead>
                 <tr>
                     <th>{% trans 'Name' %}</th>
-                    <th>{% trans 'Owner' %}</th>
+                    <th>{% trans 'Visibility' %}</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
-                {% for h in environments %}
+                {% for h in private_envs %}
                 <tr>
                     <td>{{h.name}}</td>
-                    <td>{{h.owner}}</td>
+                    <td>{{h.private}}</td>
                     <td>
                         <div class="btn-group">
-                            <a href="#" data-toggle="dropdown">
-                                <span class="glyphicon glyphicon-cog"></span>
-                                <span class="caret"></span>
-                            </a>
-                            <ul class="dropdown-menu right">
-                                <li><a href="#" class="remove-environment" data-url="{% url 'environment.views.remove_environment' environment_id=h.id %}">{% trans 'Remove Environment' %}</a></li>
+                                <a href="#" class="remove-environment" title="Delete" data-url="{% url 'environment.views.remove_environment' environment_id=h.id %}"><span class="glyphicon glyphicon-remove-sign"></span></a>
                             </ul>
                         </div>
                     </td>
@@ -47,6 +42,43 @@
         {% endif %}
     </div>
 </div>
+<div class="panel panel-default">
+    <div class="panel-heading heading-large">
+        <span class="panel-title section-title">{% trans 'Environment' %}</span>
+        <span class="section-toolbar">
+        </span>
+    </div>
+    <div class="panel-body">
+        {% if public_envs %}
+        <table class="table table-hover table-bordered">
+            <thead>
+                <tr>
+                    <th>{% trans 'Name' %}</th>
+                    <th>{% trans 'Visibility' %}</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for h in public_envs %}
+                <tr>
+                    <td>{{h.name}}</td>
+                    <td>{{h.private}}</td>
+                    <td>
+                        <div class="btn-group">
+                            <a href="#" class="star-environment" title="star" data-url="{% url 'environment.views.star_environment' environment_id=h.id %}"><span class="glyphicon glyphicon-star"></span></a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="text-muted">{% trans 'No Public Environments' %}</div>
+        {% endif %}
+    </div>
+</div>
+
+
 {% include "environment/_common.html" %}
 <script type="text/javascript">
 </script>
