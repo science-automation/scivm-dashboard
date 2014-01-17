@@ -2,17 +2,17 @@
 
 <script type="text/javascript">
     $(function() {
-        $("li#sidenav-bucket").addClass("active");
+        $("li#sidenav-bucketstore").addClass("active");
     });
-    $("a.snapshot-bucket").click(function(){
+    $("a.snapshot-bucketstore").click(function(){
         if (confirm("{% trans 'Are you sure you take a snapshot?' %}")) {
             var url = this.getAttribute('data-url');
             redirect(url);
         }
         return false;
     });
-    $("a.remove-bucket").click(function(){
-        if (confirm("{% trans 'Are you sure you want to remove the bucket?' %}")) {
+    $("a.remove-bucketstore").click(function(){
+        if (confirm("{% trans 'Are you sure you want to remove the bucketstore?' %}")) {
             var url = this.getAttribute('data-url');
             redirect(url);
         }

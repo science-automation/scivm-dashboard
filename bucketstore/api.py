@@ -6,19 +6,19 @@ from tastypie.authentication import (ApiKeyAuthentication,
 from django.contrib.auth.models import User
 from tastypie.bundle import Bundle
 from django.conf.urls import url
-from bucket.models import Bucket
+from bucketstore.models import BucketStore
 
 class UserResource(ModelResource):
     class Meta:
         queryset = User.objects.all()
         resource_name = 'user'
 
-class BucketResource(ModelResource):
+class BucketStoreResource(ModelResource):
     owner = fields.ForeignKey(UserResource, 'user', null=True, blank=True)
 
     class Meta:
-        queryset = Bucket.objects.all()
-        resource_name = 'bucket'
+        queryset = BucketStore.objects.all()
+        resource_name = 'bucketstore'
         authorization = Authorization()
         authentication = MultiAuthentication(
             ApiKeyAuthentication(), SessionAuthentication())

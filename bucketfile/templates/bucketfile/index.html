@@ -10,7 +10,7 @@
         </span>
     </div>
     <div class="panel-body">
-        {% if buckets %}
+        {% if bucketfiles %}
         <table class="table table-hover table-bordered">
             <thead>
                 <tr>
@@ -19,7 +19,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for h in buckets %}
+                {% for h in bucketfiles %}
                 <tr>
                     <td>{{h.name}}</td>
                     <td>{{h.description}}</td>
@@ -30,8 +30,8 @@
                                 <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu right">
-                                <li><a href="#" class="snapshot-bucket" data-url="{% url 'bucket.views.snapshot_bucket' bucket_id=h.id %}">{% trans 'Take Snapshot' %}</a></li>
-                                <li><a href="#" class="remove-bucket" data-url="{% url 'bucket.views.remove_bucket' bucket_id=h.id %}">{% trans 'Remove Bucket' %}</a></li>
+                                <li><a href="#" class="snapshot-bucketfile" data-url="{% url 'bucketfile.views.snapshot_bucketfile' bucketfile_id=h.id %}">{% trans 'Take Snapshot' %}</a></li>
+                                <li><a href="#" class="remove-bucketfile" data-url="{% url 'bucketfile.views.remove_bucketfile' bucketfile_id=h.id %}">{% trans 'Remove Bucket' %}</a></li>
                             </ul>
                         </div>
                     </td>
@@ -40,11 +40,11 @@
             </tbody>
         </table>
         {% else %}
-        <div class="text-muted">{% trans 'No buckets' %}</div>
+        <div class="text-muted">{% trans 'No bucketfiles' %}</div>
         {% endif %}
     </div>
 </div>
-{% include "bucket/_common.html" %}
+{% include "bucketfile/_common.html" %}
 <script type="text/javascript">
 </script>
 {% endblock %}

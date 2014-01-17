@@ -19,7 +19,8 @@ admin.autodiscover()
 from crons.api import CronResource
 from jobs.api import JobResource
 from volume.api import VolumeResource
-from bucket.api import BucketResource
+from bucketfile.api import BucketFileResource
+from bucketstore.api import BucketStoreResource
 from environment.api import EnvironmentResource
 from image.api import ImageResource
 from picloud.urls import cloud_api
@@ -28,7 +29,8 @@ v1_api = Api(api_name='v1')
 v1_api.register(CronResource())
 v1_api.register(JobResource())
 v1_api.register(VolumeResource())
-v1_api.register(BucketResource())
+v1_api.register(BucketFileResource())
+v1_api.register(BucketStoreResource())
 v1_api.register(EnvironmentResource())
 v1_api.register(ImageResource())
 
@@ -44,7 +46,8 @@ urlpatterns = patterns('',
     url(r'^apikey/', include('apikey.urls')),
     url(r'^support/', include('support.urls')),
     url(r'^volume/', include('volume.urls')),
-    url(r'^bucket/', include('bucket.urls')),
+    url(r'^bucketfile/', include('bucketfile.urls')),
+    url(r'^bucketstore/', include('bucketstore.urls')),
     url(r'^payment/', include('payment.urls')),
     url(r'^start/', include('start.urls')),
     url(r'^settings/', include('settings.urls')),
