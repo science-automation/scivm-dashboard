@@ -14,10 +14,10 @@ from scivm import tasks
 @login_required
 def index(request):
     thisuser = User.objects.get(username=request.user.username)
-#    s = UserProfile.objects.get(id=1)
+    s = UserProfile.objects.get(id=1)
     ctx = {
         'private_envs': Environment.objects.filter(owner__pk=thisuser.pk),
-#        'favorite_envs': s.favorite_env.all(),
+        'favorite_envs': s.favorite_env.all(),
         'public_envs': Environment.objects.filter(public=True),
     }
     return render_to_response('environment/index.html', ctx,
@@ -47,13 +47,21 @@ def remove_environment(request, environment_id):
 
 @login_required
 def favorite_environment(request, environment_id):
+    """Make an environment the favorite of this user
+    """
     h = Environment.objects.get(id=environment_id)
-    # give the environment a star
+    u = UserProfile.objects.get(id=1)
+    u.favorite_env.add(h)
+    # make the environment a favorite
     return redirect('environment.views.index')
 
 @login_required
 def unfavorite_environment(request, environment_id):
+    """Remove an environment from favorites
+    """
     h = Environment.objects.get(id=environment_id)
+    u = UserProfile.objects.get(id=1)
+    u.favorite_env.remove(h)
     # unstar environment
     return redirect('environment.views.index')
 

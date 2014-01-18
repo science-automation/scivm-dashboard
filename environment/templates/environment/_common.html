@@ -11,4 +11,18 @@
         }
         return false;
     });
+    $("a.favorite-environment").click(function(){
+        if (confirm("{% trans 'Are you sure you want to favorite the environment?' %}")) {
+            var url = this.getAttribute('data-url');
+            redirect(url);
+        }
+        return false;
+    });
+    $("a.unfavorite-environment").click(function(){
+        if (confirm("{% trans 'Are you sure you want to unfavorite the environment?' %}")) {
+            var url = this.getAttribute('data-url');
+            redirect(url);
+        }
+        return false;
+    });
 </script>
