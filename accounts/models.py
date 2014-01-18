@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models.signals import post_save
+import  django.db.utils
 from django.dispatch import receiver
 from django.contrib.auth.models import User
 from environment.models import Environment
@@ -11,11 +12,16 @@ class UserProfile(models.Model):
     def __unicode__(self):
         return self.user.username
 
+    
 def create_profile(sender, **kwargs):
     user = kwargs.get('instance')
     if kwargs.get('created'):
         profile = UserProfile(user=user)
-        profile.save()
+        try:
+            profile.save()
+        except django.db.utils.OperationalError, e:
+            print e
+            pass
 
 def get_default_apikey(user):
     try:
