@@ -48,6 +48,44 @@
 </div>
 <div class="panel panel-default">
     <div class="panel-heading heading-large">
+        <span class="panel-title section-title">{% trans 'Favorite Environments' %}</span>
+        <span class="section-toolbar">
+        </span>
+    </div>
+    <div class="panel-body">
+        {% if public_envs %}
+        <table class="table table-hover table-bordered">
+            <thead>
+                <tr>
+                    <th>{% trans 'Name' %}</th>
+                    <th>{% trans 'Visibility' %}</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for h in favorite_envs %}
+                <tr>
+                    <td>{{h.name}}</td>
+                    <td>{{h.private}}</td>
+                    <td>
+                        <div class="btn-group">
+                            <a href="#" class="unfavorite-environment" title="Unstar" data-url="{% url 'environment.views.unfavorite_environment' environment_id=h.id %}"><span class="glyphicon glyphicon-star"></span></a>
+                        </div>
+                        <div class="btn-group">
+                            <a href="#" class="clone-environment" title="Clone" data-url="{% url 'environment.views.clone_environment' environment_id=h.id %}"><span class="glyphicon glyphicon-th"></span></a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="text-muted">{% trans 'No Favorite Environments' %}</div>
+        {% endif %}
+    </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading heading-large">
         <span class="panel-title section-title">{% trans 'Public Environments' %}</span>
         <span class="section-toolbar">
         </span>
@@ -69,7 +107,7 @@
                     <td>{{h.private}}</td>
                     <td>
                         <div class="btn-group">
-                            <a href="#" class="star-environment" title="Star" data-url="{% url 'environment.views.star_environment' environment_id=h.id %}"><span class="glyphicon glyphicon-star"></span></a>
+                            <a href="#" class="favorite-environment" title="Star" data-url="{% url 'environment.views.favorite_environment' environment_id=h.id %}"><span class="glyphicon glyphicon-star"></span></a>
                         </div>
                         <div class="btn-group">
                             <a href="#" class="clone-environment" title="Clone" data-url="{% url 'environment.views.clone_environment' environment_id=h.id %}"><span class="glyphicon glyphicon-th"></span></a>

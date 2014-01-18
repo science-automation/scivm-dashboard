@@ -7,14 +7,17 @@ from django.template import RequestContext
 from django.contrib import messages
 from django.utils.translation import ugettext as _
 from environment.models import Environment
+from accounts.models import UserProfile
 from environment.forms import EnvironmentForm
 from scivm import tasks
 
 @login_required
 def index(request):
     thisuser = User.objects.get(username=request.user.username)
+#    s = UserProfile.objects.get(id=1)
     ctx = {
         'private_envs': Environment.objects.filter(owner__pk=thisuser.pk),
+#        'favorite_envs': s.favorite_env.all(),
         'public_envs': Environment.objects.filter(public=True),
     }
     return render_to_response('environment/index.html', ctx,
@@ -43,9 +46,15 @@ def remove_environment(request, environment_id):
     return redirect('environment.views.index')
 
 @login_required
-def star_environment(request, environment_id):
+def favorite_environment(request, environment_id):
     h = Environment.objects.get(id=environment_id)
     # give the environment a star
+    return redirect('environment.views.index')
+
+@login_required
+def unfavorite_environment(request, environment_id):
+    h = Environment.objects.get(id=environment_id)
+    # unstar environment
     return redirect('environment.views.index')
 
 @login_required
