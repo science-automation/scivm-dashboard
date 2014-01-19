@@ -26,7 +26,7 @@
                 {% for h in private_envs %}
                 <tr>
                     <td>{{h.name}}</td>
-                    <td>{{h.private}}</td>
+                    <td>{{h.public|yesno:"Public,Private" }}</td>
                     <td>
                         <div class="btn-group">
                                 <a href="#" class="modify-environment" title="Modify" data-url="{% url 'environment.views.modify_environment' environment_id=h.id %}"><span class="glyphicon glyphicon-wrench"></span></a>
@@ -71,7 +71,7 @@
                 {% for h in favorite_envs %}
                 <tr>
                     <td>{{h.name}}</td>
-                    <td>{{h.private}}</td>
+                    <td>{{h.public|yesno:"Public,Private" }}</td>
                     <td>
                         <div class="btn-group">
                             <a href="#" class="unfavorite-environment" title="Unstar" data-url="{% url 'environment.views.unfavorite_environment' environment_id=h.id %}"><span class="glyphicon glyphicon-star"></span></a>
@@ -109,7 +109,7 @@
                 {% for h in public_envs %}
                 <tr>
                     <td>{{h.name}}</td>
-                    <td>{{h.private}}</td>
+                    <td>{{h.public|yesno:"Public,Private" }}</td>
                     <td>
                         <div class="btn-group">
                             <a href="#" class="favorite-environment" title="Star" data-url="{% url 'environment.views.favorite_environment' environment_id=h.id %}"><span class="glyphicon glyphicon-star"></span></a>
