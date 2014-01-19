@@ -107,23 +107,3 @@ def edit_info_environment(request, environment_id):
     h = Environment.objects.get(id=environment_id)
     # edit the environments info
     return redirect('environment.views.index')
-
-@login_required
-def import_image(request):
-    repo = request.POST.get('repo_name')
-    if repo:
-        tasks.import_image.delay(repo)
-        messages.add_message(request, messages.INFO, _('Importing') + \
-            ' {}'.format(repo) + _('.  This could take a few minutes.'))
-    return redirect('environment.views.index')
-
-@login_required
-def build_image(request):
-    path = request.POST.get('path')
-    tag = request.POST.get('tag', None)
-    if path:
-        tasks.build_image.delay(path, tag)
-        messages.add_message(request, messages.INFO, _('Building.  This ' \
-            'could take a few minutes.'))
-    return redirect('environment.views.index')
-

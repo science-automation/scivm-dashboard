@@ -11,4 +11,20 @@
         }
         return false;
     });
+    $("a.favorite-image").click(function(){
+        var url = this.getAttribute('data-url');
+        redirect(url);
+    });
+    $("a.unfavorite-image").click(function(){
+        var url = this.getAttribute('data-url');
+        redirect(url);
+    });
+    $("a.public-image").click(function(){
+        var url = this.getAttribute('data-url');
+        redirect(url);
+    });
+    $("a.private-image").click(function(){
+        var url = this.getAttribute('data-url');
+        redirect(url);
+    });
 </script>

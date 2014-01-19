@@ -4,10 +4,12 @@ import  django.db.utils
 from django.dispatch import receiver
 from django.contrib.auth.models import User
 from environment.models import Environment
+from image.models import Image
 
 class UserProfile(models.Model):
     user = models.ForeignKey(User, null=True, unique=True)
     favorite_env = models.ManyToManyField(Environment, related_name='favorited_by')
+    favorite_image = models.ManyToManyField(Image, related_name='favorited_by')
 
     def __unicode__(self):
         return self.user.username

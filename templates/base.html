@@ -21,7 +21,6 @@
   <link href="{{STATIC_URL}}css/bootstrap-switch.css" rel="stylesheet">
   <link href="{{STATIC_URL}}css/flat-ui-fonts.css" rel="stylesheet">
   <link href="{{STATIC_URL}}css/font-awesome.css" rel="stylesheet"> 
-  <!-- <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet"> -->
 
   {% block extra_head_css %}{% endblock %}
 
@@ -82,6 +81,7 @@
         <li id="sidenav-settings"><a href="{% url 'settings.views.index' %}"><span class="fa fa-wrench"></span>{% trans 'Settings' %}</a></li>
         <li id="sidenav-jobs"><a href="{% url 'job-list' %}"><span class="fa fa-tachometer"></span>{% trans 'Jobs' %}</a></li>
         <li id="sidenav-environments"><a href="{% url 'environment.views.index' %}"><span class="fa fa-sitemap"></span>{% trans 'Environments' %}</a></li>
+        <li id="sidenav-image"><a href="{% url 'image.views.index' %}"><span class="fa fa-puzzle-piece"></span>{% trans 'Images' %}</a></li>
         <li id="sidenav-crons"><a href="{% url 'crons.views.index' %}"><span class="fa fa-clock-o"></span>{% trans 'Crons' %}</a></li>
         <li id="sidenav-bucketfile"><a href="{% url 'bucketfile.views.index' %}"><span class="fa fa-cloud-upload"></span>{% trans 'Bucket' %}</a></li>
         {% if request.user.is_superuser %}

@@ -17,6 +17,7 @@ class Migration(DataMigration):
         u'accounts.userprofile': {
             'Meta': {'object_name': 'UserProfile'},
             'favorite_env': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'favorited_by'", 'symmetrical': 'False', 'to': u"orm['environment.Environment']"}),
+            'favorite_image': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'favorited_by'", 'symmetrical': 'False', 'to': u"orm['image.Image']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']", 'unique': 'True', 'null': 'True'})
         },
@@ -58,6 +59,15 @@ class Migration(DataMigration):
         },
         u'environment.environment': {
             'Meta': {'object_name': 'Environment'},
+            'created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
+            'description': ('django.db.models.fields.TextField', [], {'default': "''", 'blank': 'True'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '96'}),
+            'owner': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"}),
+            'public': ('django.db.models.fields.BooleanField', [], {'default': 'False'})
+        },
+        u'image.image': {
+            'Meta': {'object_name': 'Image'},
             'created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'description': ('django.db.models.fields.TextField', [], {'default': "''", 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),

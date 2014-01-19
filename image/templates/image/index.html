@@ -54,30 +54,130 @@
 
 <div class="panel panel-default">
     <div class="panel-heading heading-large">
-        <span class="panel-title section-title">{% trans 'Environments' %}</span>
+        <span class="panel-title section-title">{% trans 'Images' %}</span>
         <span class="pull-right">
+            <a href="{% url 'image.views.add_image' %}" class="btn btn-success btn-sm">{% trans 'Add' %}</a>
             <a href="#dialog-import-image" id="import-image" class="btn btn-success btn-sm" data-toggle="modal">{% trans 'Import' %}</a>
             <a href="#dialog-build-image" id="build-image" class="btn btn-success btn-sm" data-toggle="modal">{% trans 'Build' %}</a>
         </span>
     </div>
     <div class="panel-body">
-        {% if image %}
+        {% if private_images %}
         <table class="table table-hover table-bordered">
             <thead>
                 <tr>
-                    <th>{% trans 'ID' %}</th>
-                    <th>{% trans 'Repository' %}</th>
-                    <th>{% trans 'Tag' %}</th>
-                    <th>{% trans 'Host' %}</th>
+                    <th>{% trans 'Name' %}</th>
+                    <th>{% trans 'Visibility' %}</th>
                     <th></th>
                 </tr>
             </thead>
+            <tbody>
+                {% for h in private_images %}
+                <tr>
+                    <td>{{h.name}}</td>
+                    <td>{{h.public|yesno:"Public,Private" }}</td>
+                    <td>
+                        <div class="btn-group">
+                                <a href="#" class="modify-image" title="Modify" data-url="{% url 'image.views.modify_image' image_id=h.id %}"><span class="glyphicon glyphicon-wrench"></span></a>
+                                <a href="#" class="share-image" title="Share" data-url="{% url 'image.views.share_image' image_id=h.id %}"><span class="glyphicon glyphicon-user"></span></a>
+                                <a href="#" class="edit-image" title="Edit" data-url="{% url 'image.views.edit_info_image' image_id=h.id %}"><span class="glyphicon glyphicon-pencil"></span></a>
+                                <a href="#" class="clone-image" title="Clone" data-url="{% url 'image.views.clone_image' image_id=h.id %}"><span class="glyphicon glyphicon-th"></span></a>
+                                {% if not h.public %}
+                                <a href="#" class="public-image" title="Make Public" data-url="{% url 'image.views.public_image' image_id=h.id %}"><span class="glyphicon glyphicon-globe"></span></a>
+                                {% else %}
+                                <a href="#" class="private-image" title="Make Private" data-url="{% url 'image.views.private_image' image_id=h.id %}"><span class="glyphicon glyphicon-globe"></span></a>
+                                {% endif %}
+                                <a href="#" class="remove-image" title="Delete" data-url="{% url 'image.views.remove_image' image_id=h.id %}"><span class="glyphicon glyphicon-trash"></span></a>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
         </table>
         {% else %}
         <div class="text-muted">{% trans 'No images' %}</div>
         {% endif %}
     </div>
 </div>
+<div class="panel panel-default">
+    <div class="panel-heading heading-large">
+        <span class="panel-title section-title">{% trans 'Favorite Images' %}</span>
+        <span class="section-toolbar">
+        </span>
+    </div>
+    <div class="panel-body">
+        {% if public_images %}
+        <table class="table table-hover table-bordered">
+            <thead>
+                <tr>
+                    <th>{% trans 'Name' %}</th>
+                    <th>{% trans 'Visibility' %}</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for h in favorite_images %}
+                <tr>
+                    <td>{{h.name}}</td>
+                    <td>{{h.public|yesno:"Public,Private" }}</td>
+                    <td>
+                        <div class="btn-group">
+                            <a href="#" class="unfavorite-image" title="Unstar" data-url="{% url 'image.views.unfavorite_image' image_id=h.id %}"><span class="glyphicon glyphicon-star"></span></a>
+                        </div>
+                        <div class="btn-group">
+                            <a href="#" class="clone-image" title="Clone" data-url="{% url 'image.views.clone_image' image_id=h.id %}"><span class="glyphicon glyphicon-th"></span></a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="text-muted">{% trans 'No Starred Images' %}</div>
+        {% endif %}
+    </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading heading-large">
+        <span class="panel-title section-title">{% trans 'Public Images' %}</span>
+        <span class="section-toolbar">
+        </span>
+    </div>
+    <div class="panel-body">
+        {% if public_images %}
+        <table class="table table-hover table-bordered">
+            <thead>
+                <tr>
+                    <th>{% trans 'Name' %}</th>
+                    <th>{% trans 'Visibility' %}</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for h in public_images %}
+                <tr>
+                    <td>{{h.name}}</td>
+                    <td>{{h.public|yesno:"Public,Private" }}</td>
+                    <td>
+                        <div class="btn-group">
+                            <a href="#" class="favorite-image" title="Star" data-url="{% url 'image.views.favorite_image' image_id=h.id %}"><span class="glyphicon glyphicon-star"></span></a>
+                        </div>
+                        <div class="btn-group">
+                            <a href="#" class="clone-image" title="Clone" data-url="{% url 'image.views.clone_image' image_id=h.id %}"><span class="glyphicon glyphicon-th"></span></a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="text-muted">{% trans 'No Public Images' %}</div>
+        {% endif %}
+    </div>
+</div>
+
+
 {% include "image/_common.html" %}
 <script type="text/javascript">
     $("#btn-build").click(function(){
