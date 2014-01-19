@@ -25,13 +25,13 @@
             <tbody>
                 {% for h in private_envs %}
                 <tr>
-                    <td>{{h.name}}</td>
+                    <td><a href="#" class="edit-environment" title="Edit" data-url="{% url 'environment.views.edit_environment' environment_id=h.id %}">{{h.name}}</a></td>
                     <td>{{h.public|yesno:"Public,Private" }}</td>
                     <td>
                         <div class="btn-group">
                                 <a href="#" class="modify-environment" title="Modify" data-url="{% url 'environment.views.modify_environment' environment_id=h.id %}"><span class="glyphicon glyphicon-wrench"></span></a>
                                 <a href="#" class="share-environment" title="Share" data-url="{% url 'environment.views.share_environment' environment_id=h.id %}"><span class="glyphicon glyphicon-user"></span></a>
-                                <a href="#" class="edit-environment" title="Edit" data-url="{% url 'environment.views.edit_info_environment' environment_id=h.id %}"><span class="glyphicon glyphicon-pencil"></span></a>
+                                <a href="#" class="edit-environment" title="Edit" data-url="{% url 'environment.views.edit_environment' environment_id=h.id %}"><span class="glyphicon glyphicon-pencil"></span></a>
                                 <a href="#" class="clone-environment" title="Clone" data-url="{% url 'environment.views.clone_environment' environment_id=h.id %}"><span class="glyphicon glyphicon-th"></span></a>
                                 {% if not h.public %}
                                 <a href="#" class="public-environment" title="Make Public" data-url="{% url 'environment.views.public_environment' environment_id=h.id %}"><span class="glyphicon glyphicon-globe"></span></a>

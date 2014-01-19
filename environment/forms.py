@@ -28,3 +28,16 @@ class EnvironmentForm(forms.ModelForm):
     class Meta:
         model = Environment
         fields = ('name', 'description','public')
+
+
+class EditEnvironmentForm(forms.Form):
+    name = forms.CharField(required=True)
+    description = forms.CharField(required=False)
+
+    def __init__(self, *args, **kwargs):
+        super(EditEnvironmentForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_id = 'form-edit-environment'
+        self.helper.form_class = 'form-horizontal'
+        self.helper.form_action = reverse('environment.views.index')
+        self.helper.help_text_inline = True
