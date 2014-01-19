@@ -16,7 +16,7 @@ def index(request):
     current_user = request.user
     u = UserProfile.objects.get(id=current_user.id)
     ctx = {
-        'private_images': Image.objects.filter(owner__pk=thisuser.pk),
+        'private_images': Image.objects.filter(owner__pk=current_user.pk),
         'favorite_images': u.favorite_image.all(),
         'public_images': Image.objects.filter(public=True),
     }
