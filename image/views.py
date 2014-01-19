@@ -13,11 +13,11 @@ from scivm import tasks
 
 @login_required
 def index(request):
-    thisuser = User.objects.get(username=request.user.username)
-    s = UserProfile.objects.get(id=1)
+    current_user = request.user
+    u = UserProfile.objects.get(id=current_user.id)
     ctx = {
         'private_images': Image.objects.filter(owner__pk=thisuser.pk),
-        'favorite_images': s.favorite_image.all(),
+        'favorite_images': u.favorite_image.all(),
         'public_images': Image.objects.filter(public=True),
     }
     return render_to_response('image/index.html', ctx,
@@ -52,7 +52,8 @@ def favorite_image(request, image_id):
     """Make an image the favorite of this user
     """
     h = Image.objects.get(id=image_id)
-    u = UserProfile.objects.get(id=1)
+    current_user = request.user
+    u = UserProfile.objects.get(id=current_user.id)
     u.favorite_image.add(h)
     # make the image a favorite
     return redirect('image.views.index')
@@ -62,7 +63,8 @@ def unfavorite_image(request, image_id):
     """Remove an image from favorites
     """
     h = Image.objects.get(id=image_id)
-    u = UserProfile.objects.get(id=1)
+    current_user = request.user
+    u = UserProfile.objects.get(id=current_user.id)
     u.favorite_image.remove(h)
     # unstar image
     return redirect('image.views.index')
