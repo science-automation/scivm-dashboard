@@ -73,8 +73,27 @@ def clone_environment(request, environment_id):
 
 @login_required
 def share_environment(request, environment_id):
+    """Share the environment with another user. To do: make sure a user owns it
+    """
     h = Environment.objects.get(id=environment_id)
-    # clone the environment
+    return redirect('environment.views.index')
+
+@login_required
+def public_environment(request, environment_id):
+    """Make an environment public. To do: make sure a user owns it
+    """
+    h = Environment.objects.get(id=environment_id)
+    h.public = True
+    h.save()
+    return redirect('environment.views.index')
+
+@login_required
+def private_environment(request, environment_id):
+    """Make an environment private.  To do: make sure user owns it
+    """
+    h = Environment.objects.get(id=environment_id)
+    h.public = False
+    h.save()
     return redirect('environment.views.index')
 
 @login_required

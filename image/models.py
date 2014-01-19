@@ -9,7 +9,7 @@ from environment.models import Environment
 from scivm import utils
 
 class Image(models.Model):
-    environment_id = models.ForeignKey(Environment)
+#    environment_id = models.ForeignKey(Environment)
     environments = models.ManyToManyField(Environment, related_name='included_images')
     image_id = models.CharField(max_length=96, null=True, blank=True)
     name = models.CharField(max_length=256, null=False, blank=False)

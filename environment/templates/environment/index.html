@@ -33,6 +33,11 @@
                                 <a href="#" class="share-environment" title="Share" data-url="{% url 'environment.views.share_environment' environment_id=h.id %}"><span class="glyphicon glyphicon-user"></span></a>
                                 <a href="#" class="edit-environment" title="Edit" data-url="{% url 'environment.views.edit_info_environment' environment_id=h.id %}"><span class="glyphicon glyphicon-pencil"></span></a>
                                 <a href="#" class="clone-environment" title="Clone" data-url="{% url 'environment.views.clone_environment' environment_id=h.id %}"><span class="glyphicon glyphicon-th"></span></a>
+                                {% if not h.public %}
+                                <a href="#" class="public-environment" title="Make Public" data-url="{% url 'environment.views.public_environment' environment_id=h.id %}"><span class="glyphicon glyphicon-globe"></span></a>
+                                {% else %}
+                                <a href="#" class="private-environment" title="Make Private" data-url="{% url 'environment.views.private_environment' environment_id=h.id %}"><span class="glyphicon glyphicon-globe"></span></a>
+                                {% endif %}
                                 <a href="#" class="remove-environment" title="Delete" data-url="{% url 'environment.views.remove_environment' environment_id=h.id %}"><span class="glyphicon glyphicon-trash"></span></a>
                             </ul>
                         </div>
