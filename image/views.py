@@ -14,10 +14,10 @@ from scivm import tasks
 @login_required
 def index(request):
     thisuser = User.objects.get(username=request.user.username)
-#   s = UserProfile.objects.get(id=1)
+    s = UserProfile.objects.get(id=1)
     ctx = {
         'private_images': Image.objects.filter(owner__pk=thisuser.pk),
-#        'favorite_images': s.favorite_image.all(),
+        'favorite_images': s.favorite_image.all(),
         'public_images': Image.objects.filter(public=True),
     }
     return render_to_response('image/index.html', ctx,
