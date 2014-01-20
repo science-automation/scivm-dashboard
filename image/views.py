@@ -8,7 +8,7 @@ from django.contrib import messages
 from django.utils.translation import ugettext as _
 from image.models import Image
 from accounts.models import UserProfile
-from image.forms import ImageForm
+from image.forms import ImageForm, EditImageForm
 from scivm import tasks
 
 @login_required
@@ -107,10 +107,22 @@ def modify_image(request, image_id):
     return redirect('image.views.index')
 
 @login_required
-def edit_info_image(request, image_id):
+def edit_image(request, image_id):
+    """Edit the name and description of the enviroment.  Associate images to an image
+    """
     h = Image.objects.get(id=image_id)
-    # edit the images info
-    return redirect('image.views.index')
+    current_user = request.user
+    u = UserProfile.objects.get(id=current_user.id)
+    initial = {
+        'name': h.name,
+        'description': h.description,
+    }
+    ctx = {
+        'image': h,
+        'form': EditImageForm(initial=initial),
+    }
+    return render_to_response('image/image_details.html', ctx,
+        context_instance=RequestContext(request))
 
 @login_required
 def import_image(request):
@@ -130,4 +142,3 @@ def build_image(request):
         messages.add_message(request, messages.INFO, _('Building.  This ' \
             'could take a few minutes.'))
     return redirect('image.views.index')
-

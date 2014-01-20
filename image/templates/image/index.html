@@ -74,13 +74,13 @@
             <tbody>
                 {% for h in private_images %}
                 <tr>
-                    <td>{{h.name}}</td>
+                    <td><a href="#" class="edit-image" title="Edit" data-url="{% url 'image.views.edit_image' image_id=h.id %}">{{h.name}}</a></td>
                     <td>{{h.public|yesno:"Public,Private" }}</td>
                     <td>
                         <div class="btn-group">
                                 <a href="#" class="modify-image" title="Modify" data-url="{% url 'image.views.modify_image' image_id=h.id %}"><span class="glyphicon glyphicon-wrench"></span></a>
                                 <a href="#" class="share-image" title="Share" data-url="{% url 'image.views.share_image' image_id=h.id %}"><span class="glyphicon glyphicon-user"></span></a>
-                                <a href="#" class="edit-image" title="Edit" data-url="{% url 'image.views.edit_info_image' image_id=h.id %}"><span class="glyphicon glyphicon-pencil"></span></a>
+                                <a href="#" class="edit-image" title="Edit" data-url="{% url 'image.views.edit_image' image_id=h.id %}"><span class="glyphicon glyphicon-pencil"></span></a>
                                 <a href="#" class="clone-image" title="Clone" data-url="{% url 'image.views.clone_image' image_id=h.id %}"><span class="glyphicon glyphicon-th"></span></a>
                                 {% if not h.public %}
                                 <a href="#" class="public-image" title="Make Public" data-url="{% url 'image.views.public_image' image_id=h.id %}"><span class="glyphicon glyphicon-globe"></span></a>
