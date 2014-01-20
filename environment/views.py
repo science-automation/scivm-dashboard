@@ -136,24 +136,25 @@ def edit_environment(request, environment_id):
 
 @login_required
 #@owner_required # TODO
-def attach_image(request, environment_id=None):
+def attach_image(request, environment_id=None, image_id=None):
     """Relate an image to an environment
     """
-    h = Environment.objects.get(id=environment_id)
-    data = request.POST
-    c = Container.objects.get(container_id=i)
-    app.containers.add(c)
-    app.save()
-    return redirect(reverse('environment.views.details',
-        kwargs={'app_uuid': app_uuid}))
+    env = Environment.objects.get(id=environment_id)
+    i = Image.objects.get(id=image_id)
+    i.environments.add(env)
+    env.save()
+    return redirect(reverse('environment.views.edit_environment',
+        kwargs={'environment_id': environment_id}))
 
 @login_required
 #@owner_required # TODO
-def remove_image(request, environment_id=None, image_id=None):
+def unattach_image(request, environment_id=None, image_id=None):
+    """Unrelate an image to an environment
+    """
     env = Environment.objects.get(id=environment_id)
-    c = Container.objects.get(container_id=container_id)
-    app.containers.remove(c)
-    app.save()
-    return redirect(reverse('environment.views.details',
+    i = Image.objects.get(id=image_id)
+    i.environments.remove(env)
+    env.save()
+    return redirect(reverse('environment.views.edit_environment',
         kwargs={'environment_id': environment_id}))
 

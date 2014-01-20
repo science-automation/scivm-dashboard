@@ -33,14 +33,14 @@
                 </tr>
             </thead>
             <tbody>
-                {% for h in included_images %}
+                {% for image in included_images %}
                 <tr>
-                    <td>{{h.name}}</td>
-                    <td>{{h.public|yesno:"Public,Private" }}</td>
+                    <td>{{image.name}}</td>
+                    <td>{{image.public|yesno:"Public,Private" }}</td>
                     <td>
                         <div class="btn-group">
-                                <a href="#" class="modify-image" title="Modify" data-url="{% url 'image.views.modify_image' image_id=h.id %}"><span class="glyphicon glyphicon-wrench"></span></a>
-                                <a href="#" class="remove-image" title="Delete" data-url="{% url 'image.views.remove_image' image_id=h.id %}"><span class="glyphicon glyphicon-trash"></span></a>
+                            <ul>
+                                <a href="#" class="unattach-image" title="Unattach" data-url="{% url 'environment.views.unattach_image' image_id=image.id environment_id=environment.id %}"><span class="glyphicon glyphicon-remove-sign"></span></a>
                             </ul>
                         </div>
                     </td>
@@ -68,14 +68,14 @@
                 </tr>
             </thead>
             <tbody>
-                {% for h in private_images %}
+                {% for image in private_images %}
                 <tr>
-                    <td>{{h.name}}</td>
-                    <td>{{h.public|yesno:"Public,Private" }}</td>
+                    <td>{{image.name}}</td>
+                    <td>{{image.public|yesno:"Public,Private" }}</td>
                     <td>
                         <div class="btn-group">
-                                <a href="#" class="modify-image" title="Modify" data-url="{% url 'image.views.modify_image' image_id=h.id %}"><span class="glyphicon glyphicon-wrench"></span></a>
-                                <a href="#" class="remove-image" title="Delete" data-url="{% url 'image.views.remove_image' image_id=h.id %}"><span class="glyphicon glyphicon-trash"></span></a>
+                            <ul>
+                                <a href="#" class="attach-image" title="Attach" data-url="{% url 'environment.views.attach_image' image_id=image.id environment_id=environment.id %}"><span class="glyphicon glyphicon-ok-circle"></span></a>
                             </ul>
                         </div>
                     </td>
@@ -88,6 +88,7 @@
         {% endif %}
     </div>
 </div>
+{% include "environment/_common.html" %}
 <script type="text/javascript">
 </script>
 {% endblock %}

@@ -12,4 +12,6 @@ urlpatterns = patterns('environment.views',
     url(r'^remove/(?P<environment_id>.*)/$', 'remove_environment'),
     url(r'^public/(?P<environment_id>.*)/$', 'public_environment'),
     url(r'^private/(?P<environment_id>.*)/$', 'private_environment'),
+    url(r'^attach_image/(?P<environment_id>.*)/(?P<image_id>.*)$', 'attach_image'),
+    url(r'^unattach_image/(?P<environment_id>.*)/(?P<image_id>.*)$', 'unattach_image'),
 )
