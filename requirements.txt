@@ -35,7 +35,7 @@ Jinja2
 decorator
 pyasn1
 iptools
-optcomplete
+#optcomplete
 pycrypto
 ecdsa
 markupsafe
