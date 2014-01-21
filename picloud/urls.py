@@ -8,7 +8,7 @@ from .bucket import CloudBucketResource
 from .file_ import CloudFileResource
 from .volume import CloudVolumeResource
 from .cron import CloudCronResource
-from .environment import CloudEnvironmentResource
+from .env import CloudEnvironmentResource
 from .queue import CloudQueueResource
 from .realtime import CloudRealtimeResource
 from .rest import CloudRestResource
