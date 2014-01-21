@@ -113,6 +113,13 @@ def edit_image(request, image_id):
     h = Image.objects.get(id=image_id)
     current_user = request.user
     u = UserProfile.objects.get(id=current_user.id)
+    if request.method == 'POST':
+        form = ImageForm(request.POST)
+        if form.is_valid():
+            ptype = form.save(commit=False)
+            ptype.owner = request.user
+            ptype.save()
+            return redirect(reverse('image.views.index'))
     initial = {
         'name': h.name,
         'description': h.description,

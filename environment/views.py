@@ -120,6 +120,13 @@ def edit_environment(request, environment_id):
     h = Environment.objects.get(id=environment_id)
     current_user = request.user
     u = UserProfile.objects.get(id=current_user.id)
+    if request.method == 'POST':
+        form = EnvironmentForm(request.POST)
+        if form.is_valid():
+            ptype = form.save(commit=False)
+            ptype.owner = request.user
+            ptype.save()
+            return redirect(reverse('environment.views.index'))
     initial = {
         'name': h.name,
         'description': h.description,
