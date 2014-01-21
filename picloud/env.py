@@ -9,7 +9,7 @@ from .base import CloudResource, dispatch
 
 from cloud.util.zip_packer import Packer, UnPacker
 
-#from environment.models import Environment
+from environment.models import Environment
 from image.models import Image
 
 import json
