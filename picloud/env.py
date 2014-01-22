@@ -52,6 +52,14 @@ class CloudEnvironmentResource(CloudResource):
     
     @dispatch
     def create_hnd(self, request, **kwargs):
+        print "still testing"
+#        print request.POST.items('env_name')
+#        form = EnvironmentForm()
+#        form.name = request.POST.items('env_name')
+#        form.description = request.POST.items('env_desc')
+#        if not form.is_valid():
+#            return self.error_response(request, form.errors, response_class=http.HttpBadRequest)
+#        env = form.save(commit=True)
         return self.create_response(request, {})
     
     @dispatch
