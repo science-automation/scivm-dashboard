@@ -85,13 +85,12 @@ class S3(object):
         return key
 
     def prefix_with_user_dir(self, user, name):
-        #FIXME
-        return name
+        return "{0}/{1}".format(user.pk, name)
     
     def public_url_folder(self, user):
-        #FIXME prefixed with https://s3.amazonaws.com/ by cli
-        #TODO
-        return "?"
+        # prefixed with https://s3.amazonaws.com/ by cli
+        prefix = self.prefix_with_user_dir(user, "")
+        return "{0}/{1}".format(self.root_bucket_name, prefix)
     
     def get_upload_policy(self, key):
         now = datetime.datetime.utcnow().replace(tzinfo=utc)
@@ -303,6 +302,13 @@ class CloudBucketResource(CloudResource):
         key = s3.get_key(request.user, name)
         if key is None: 
             return self._file_not_found(request)
+        
+        status = False
+        acl = key.get_acl()
+        for grant in acl.acl.grants:
+            if g.type == "Group" and g.uri == "http://acs.amazonaws.com/groups/global/AllUsers" and g.permission == "READ":
+                status = True
+                break
 
         resp = {
             "content-disposition": key.content_disposition, 
@@ -311,7 +317,7 @@ class CloudBucketResource(CloudResource):
             "last-modified": key.last_modified, 
             "cache-control": key.cache_control, 
             "content-type": key.content_type, 
-            "public": False, #FIXME from where this info comes from?
+            "public": status, 
             "size": key.size
         }
         return self.create_response(request, resp)
@@ -336,8 +342,8 @@ class CloudBucketResource(CloudResource):
         if key is None: 
             return self._file_not_found(request)
         
-        key.delete() #TODO what if this fails
-
+        key.delete()
+        
         return self.create_response(request, {"removed": True})
     
     @dispatch("/is_public/")
@@ -348,9 +354,14 @@ class CloudBucketResource(CloudResource):
         if key is None: 
             return self._file_not_found(request)
         
-        #TODO
-        status = True
-        raise
+        status = False
+        
+        acl = key.get_acl()
+        for grant in acl.acl.grants:
+            if g.type == "Group" and g.uri == "http://acs.amazonaws.com/groups/global/AllUsers" and g.permission == "READ":
+                status = True
+                break
+        
         return self.create_response(request, {"status": status}) 
 
     @dispatch("/make_public/")
@@ -363,9 +374,9 @@ class CloudBucketResource(CloudResource):
         if key is None: 
             return self._file_not_found(request)
         
-        key.make_public()
+        key.set_canned_acl("public-read")
 
-        #FIXME will be prefixed with https://s3.amazonaws.com/ by cli
+        # will be prefixed with https://s3.amazonaws.com/ by cli
         url = "{0}/{1}".format(s3.root_bucket_name, key.key)
         return self.create_response(request, {"url": url}) 
     
