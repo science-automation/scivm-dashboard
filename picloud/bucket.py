@@ -257,10 +257,9 @@ class CloudBucketResource(CloudResource):
         
         # get list iterator from s3
         file_iter = bucket.list(prefix=eff_prefix, delimiter=delimiter, marker=marker, headers=None, encoding_type=None) 
-
+        
         # convert to list, try to get +1 item to be able to determine if the results are truncated
-        files = [ key.key for key in itertools.islice(file_iter, 1, max_keys+2) ]
-
+        files = [ key.key.split("/", 1)[1] for key in itertools.islice(file_iter, 0, max_keys+1) ]
         # if max_keys is less then there are more results -> truncated = True
         truncated = len(files) > max_keys
         if truncated:
@@ -313,7 +312,7 @@ class CloudBucketResource(CloudResource):
         resp = {
             "content-disposition": key.content_disposition, 
             "content-encoding": key.content_encoding, 
-            "md5sum": key.etag[1:-1], #FIXME md5 must be stored somewhere else
+            "md5sum": key.etag[1:-1], 
             "last-modified": key.last_modified, 
             "cache-control": key.cache_control, 
             "content-type": key.content_type, 
@@ -330,20 +329,17 @@ class CloudBucketResource(CloudResource):
         if key is None: 
             return self._file_not_found(request)
         
-        #TODO etag is not good for this; maybe its stored somewhere else
         md5sum = key.etag[1:-1]
         return self.create_response(request, {"md5sum": md5sum})
     
     @dispatch 
     def remove_hnd(self, request, **kwargs):
-        name = request.POST["name"]
+        names = [ s3.prefix_with_user_dir(request.user, name) for name in request.POST.getlist("name") ]
         
-        key = s3.get_key(request.user, name)
-        if key is None: 
-            return self._file_not_found(request)
-        
-        key.delete()
-        
+        bucket = s3.get_bucket()
+        ret = bucket.delete_keys(names)
+        if ret.errors:
+            raise #FIXME what to do
         return self.create_response(request, {"removed": True})
     
     @dispatch("/is_public/")
