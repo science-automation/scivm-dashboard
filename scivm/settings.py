@@ -275,12 +275,20 @@ CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
 # location of your API server
 SCICLOUD_API_ROOT_URL = "http://localhost/api/cloud/"
 
+
+SCICLOUD_S3_ACCESS_KEY = None
+SCICLOUD_S3_SECRET_KEY = None
+SCICLOUD_S3_ROOT_BUCKET = "scicloud-user-buckets"
+SCICLOUD_S3_DEBUG_LEVEL = 0
+
 try:
     from local_settings import *
 except ImportError:
     pass
 
 assert SCICLOUD_API_ROOT_URL is not None
+assert SCICLOUD_S3_ACCESS_KEY is not None
+assert SCICLOUD_S3_SECRET_KEY is not None
 
 import djcelery
 djcelery.setup_loader()
