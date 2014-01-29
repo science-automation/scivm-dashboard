@@ -119,9 +119,9 @@ class S3(object):
         if not 'date' in headers and not 'x-amz-date' in headers:
             headers['date'] = formatdate(timeval=None, localtime=False, usegmt=True)
         canonical_string = self.get_canonical_string(url, headers, method)
-        h = hmac.new(self._secret_key, canonical_string, digestmod=sha)
+        h = hmac.new(self._cli_secret_key, canonical_string, digestmod=sha)
         signature = base64.encodestring(h.digest()).strip()
-        return 'AWS %s:%s' % (self._access_key, signature)
+        return 'AWS %s:%s' % (self._cli_access_key, signature)
 
     def get_canonical_string(self, url, headers, method):
         # from python-requests-aws package
@@ -363,10 +363,10 @@ class CloudBucketResource(CloudResource):
         if key is None: 
             return self._file_not_found(request)
         
-        #TODO
+        key.make_public()
+
         #FIXME will be prefixed with https://s3.amazonaws.com/ by cli
-        url = "?"
-        raise
+        url = "{0}/{1}".format(s3.root_bucket_name, key.key)
         return self.create_response(request, {"url": url}) 
     
     @dispatch("/make_private/")
@@ -377,9 +377,8 @@ class CloudBucketResource(CloudResource):
         if key is None: 
             return self._file_not_found(request)
         
-        #TODO
+        key.set_canned_acl("private")
         status = True
-        raise
         return self.create_response(request, {"status": status})
     
     @dispatch("/public_url_folder/")
