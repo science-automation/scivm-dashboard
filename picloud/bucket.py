@@ -30,15 +30,25 @@ import json
 import itertools
 import datetime
 import boto
-import boto.provider
-import boto.auth
 
 import base64
 import hmac
-from hashlib import sha1
+from hashlib import sha1 as sha
+from email.utils import formatdate
+from urlparse import urlparse
 
 
 class S3(object):
+    service_base_url = 's3.amazonaws.com'
+    
+    # List of Query String Arguments of Interest
+    special_params = [
+        'acl', 'location', 'logging', 'partNumber', 'policy', 'requestPayment',
+        'torrent', 'versioning', 'versionId', 'versions', 'website', 'uploads',
+        'uploadId', 'response-content-type', 'response-content-language',
+        'response-expires', 'response-cache-control', 'delete', 'lifecycle',
+        'response-content-disposition', 'response-content-encoding'
+    ]
 
     def __init__(self, access_key, secret_key, root_bucket_name, client_access_key, client_secret_key, debug=None):
         self._root_bucket_name = root_bucket_name
@@ -48,8 +58,6 @@ class S3(object):
         
         self._cli_access_key = client_access_key
         self._cli_secret_key = client_secret_key
-        self._cli_provider = boto.provider.Provider("aws", access_key=self._cli_access_key, secret_key=self._cli_secret_key)
-        self._cli_hmackeys = boto.auth.HmacKeys(None, None, self._cli_provider)  
 
         self._upload_expiration_kwargs = {"hours": 8}
         
@@ -61,7 +69,7 @@ class S3(object):
 
     @property
     def root_url(self):
-        return "https://scicloud-user-buckets.s3-external-1.amazonaws.com/" #FIXME
+        return "https://{0}.{1}/".format(self.root_bucket_name, self.service_base_url)
     
     @property
     def root_bucket_name(self):
@@ -100,26 +108,76 @@ class S3(object):
             ], 
             "expiration": expiration,
         }
-        policy_encoded =  json.dumps(policy).encode("utf-8").encode("base64").replace('\n', '')
+        policy_encoded = json.dumps(policy).encode("utf-8").encode("base64").replace('\n', '')
         return policy_encoded
     
     def get_policy_signature(self, encoded_policy):
-        signature = hmac.new(self._cli_secret_key, encoded_policy, sha1).digest().encode("base64").replace('\n', '')
+        signature = hmac.new(self._cli_secret_key, encoded_policy, sha).digest().encode("base64").replace('\n', '')
         return signature
 
-    def get_auth_signature(self, method, headers):
-        #if 'Date' not in headers:
-        #   headers['Date'] = formatdate(usegmt=True)
+    def get_auth_signature(self, method, url, headers):
+        if not 'date' in headers and not 'x-amz-date' in headers:
+            headers['date'] = formatdate(timeval=None, localtime=False, usegmt=True)
+        canonical_string = self.get_canonical_string(url, headers, method)
+        h = hmac.new(self._secret_key, canonical_string, digestmod=sha)
+        signature = base64.encodestring(h.digest()).strip()
+        return 'AWS %s:%s' % (self._access_key, signature)
 
-        string_to_sign = boto.utils.canonical_string(method, "",
-                                                     headers, None,
-                                                     self._cli_provider)
-        print 'StringToSign:\n%s' % string_to_sign
-        b64_hmac = self._cli_hmackeys.sign_string(string_to_sign)
-        auth_hdr = self._cli_provider.auth_header
-        auth = "%s %s:%s" % (auth_hdr, self._cli_provider.access_key, b64_hmac)
-        print 'Signature:\n%s' % auth
-        return auth
+    def get_canonical_string(self, url, headers, method):
+        # from python-requests-aws package
+        parsedurl = urlparse(url)
+        objectkey = parsedurl.path[1:]
+        query_args = sorted(parsedurl.query.split('&'))
+
+        bucket = parsedurl.netloc[:-len(self.service_base_url)]
+        if len(bucket) > 1:
+            # remove last dot
+            bucket = bucket[:-1]
+
+        interesting_headers = {
+            'content-md5': '',
+            'content-type': '',
+            'date': ''}
+        for key in headers:
+            lk = key.lower()
+            try:
+                lk = lk.decode('utf-8')
+            except:
+                pass
+            if headers[key] and (lk in interesting_headers.keys() or lk.startswith('x-amz-')):
+                interesting_headers[lk] = headers[key].strip()
+
+        # If x-amz-date is used it supersedes the date header.
+        if 'x-amz-date' in interesting_headers:
+            interesting_headers['date'] = ''
+
+        buf = '%s\n' % method
+        for key in sorted(interesting_headers.keys()):
+            val = interesting_headers[key]
+            if key.startswith('x-amz-'):
+                buf += '%s:%s\n' % (key, val)
+            else:
+                buf += '%s\n' % val
+
+        # append the bucket if it exists
+        if bucket != '':
+            buf += '/%s' % bucket
+
+        # add the objectkey. even if it doesn't exist, add the slash
+        buf += '/%s' % objectkey
+
+        params_found = False
+
+        # handle special query string arguments
+        for q in query_args:
+            k = q.split('=')[0]
+            if k in self.special_params:
+                if params_found:
+                    buf += '&%s' % q
+                else:
+                    buf += '?%s' % q
+                params_found = True
+        return buf
 
 
 s3 = S3(settings.SCICLOUD_S3_ACCESS_KEY, 
@@ -149,10 +207,10 @@ class CloudBucketResource(CloudResource):
 
     @dispatch 
     def new_hnd(self, request, **kwargs):
+        name = request.POST["name"]
+        hex_md5 = request.POST['hex-md5']
         content_type = request.POST.get("content-type", "binary/octet-stream")
         content_encoding = request.POST.get('content-encoding', "")
-        hex_md5 = request.POST['hex-md5']
-        name = request.POST["name"]
          
         key = s3.prefix_with_user_dir(request.user, name)
         
@@ -202,7 +260,7 @@ class CloudBucketResource(CloudResource):
         file_iter = bucket.list(prefix=eff_prefix, delimiter=delimiter, marker=marker, headers=None, encoding_type=None) 
 
         # convert to list, try to get +1 item to be able to determine if the results are truncated
-        files = list(itertools.islice(file_iter, 1, max_keys+1))
+        files = [ key.key for key in itertools.islice(file_iter, 1, max_keys+2) ]
 
         # if max_keys is less then there are more results -> truncated = True
         truncated = len(files) > max_keys
@@ -218,19 +276,18 @@ class CloudBucketResource(CloudResource):
         key = s3.get_key(request.user, name)
         if key is None: 
             return self._file_not_found(request)
-
+        
+        ticket = {}
+        auth = s3.get_auth_signature("GET", s3.root_url + key.key, ticket)
+        ticket["Authorization"] = auth
         response  = {
-            "ticket": {
-                "Date": "Wed, 29 Jan 2014 06:35:04 +0000", 
-                "Authorization": "AWS AKIAJCY7JV52WD4MJSNQ:jnnhKLxgxt1R+dbuuNYmCJfP8Mk="
-            }, 
+            "ticket": ticket,
             "params": {
-                "action": "https://pi-user-buckets.s3.amazonaws.com/Wdzvw6doCTYgeFJstoKvEdxDUMi0Rd1x43F1cJpj%2Fmi.mi", 
+                "action": s3.root_url + key.key,
                 "bucket": s3.root_bucket_name, 
                 "size": key.size, 
             }
         }
-        raise
         return self.create_response(request, response)
     
     @dispatch 
@@ -250,7 +307,7 @@ class CloudBucketResource(CloudResource):
         resp = {
             "content-disposition": key.content_disposition, 
             "content-encoding": key.content_encoding, 
-            "md5sum": key.etag, #FIXME md5 must be stored somewhere else
+            "md5sum": key.etag[1:-1], #FIXME md5 must be stored somewhere else
             "last-modified": key.last_modified, 
             "cache-control": key.cache_control, 
             "content-type": key.content_type, 
@@ -268,7 +325,7 @@ class CloudBucketResource(CloudResource):
             return self._file_not_found(request)
         
         #TODO etag is not good for this; maybe its stored somewhere else
-        md5sum = key.etag
+        md5sum = key.etag[1:-1]
         return self.create_response(request, {"md5sum": md5sum})
     
     @dispatch 
