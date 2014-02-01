@@ -19,14 +19,27 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
 from django.utils.translation import ugettext as _
-from django.db.models import Q
 from django.core.cache import cache
 from json_field import JSONField
 from scivm import utils
 
+
+class EnvironmentManager(models.Manager):
+    
+    def for_user_id(self, user_id):
+        return self.filter(owner_id=user_id)
+    
+    def avail_for_user_id(self, user_id):
+        return self.filter(models.Q(owner_id=user_id) | models.Q(public=True))
+
+
 class Environment(models.Model):
+    objects = EnvironmentManager()
+
     name = models.CharField(max_length=96, null=False, blank=False)
     owner = models.ForeignKey(User)
     description = models.TextField(default="", blank=True)
     created = models.DateTimeField(auto_now_add=True)
     public = models.BooleanField(null=False, default=False)
+    
+    favorited_by = models.ManyToManyField(User, related_name="favorite_env")

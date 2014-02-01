@@ -19,13 +19,24 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
 from django.utils.translation import ugettext as _
-from django.db.models import Q
 from django.core.cache import cache
 from json_field import JSONField
 from environment.models import Environment
 from scivm import utils
 
+
+class ImageManager(models.Manager):
+    
+    def for_user_id(self, user_id):
+        return self.filter(owner_id=user_id)
+    
+    def avail_for_user_id(self, user_id):
+        return self.filter(models.Q(owner_id=user_id) | models.Q(public=True))
+
+
 class Image(models.Model):
+    objects = ImageManager()
+
     environments = models.ManyToManyField(Environment, related_name='included_images')
     image_id = models.CharField(max_length=96, null=True, blank=True)
     name = models.CharField(max_length=256, null=False, blank=False)
@@ -36,3 +47,5 @@ class Image(models.Model):
     public = models.BooleanField(null=False, default=False)
     base = models.BooleanField(null=False, default=False)
     size = models.BigIntegerField(null=True, blank=True)
+    
+    favorited_by = models.ManyToManyField(User, related_name='favorite_image')
