@@ -148,6 +148,10 @@ def private_environment(request, environment_id):
         raise http.Http404
     h.public = False
     h.save()
+    
+    # remove env from favorites!
+    others_pks = h.favorited_by.exclude(pk=request.user.pk).values_list("pk")
+    h.favorited_by.remove(*others_pks)
     return redirect('environment.views.index')
 
 

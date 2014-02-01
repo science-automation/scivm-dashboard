@@ -141,6 +141,11 @@ def private_image(request, image_id):
     
     h.public = False
     h.save()
+    
+    # remove img from favorites!
+    others_pks = h.favorited_by.exclude(pk=request.user.pk).values_list("pk")
+    h.favorited_by.remove(*others_pks)
+    
     return redirect('image.views.index')
 
 @login_required
