@@ -276,12 +276,13 @@ CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
 SCICLOUD_API_ROOT_URL = "http://localhost/api/cloud/"
 
 
-SCICLOUD_S3_ACCESS_KEY = None
-SCICLOUD_S3_SECRET_KEY = None
-SCICLOUD_S3_CLIENT_ACCESS_KEY = None
-SCICLOUD_S3_CLIENT_SECRET_KEY = None
-SCICLOUD_S3_ROOT_BUCKET = "scicloud-user-buckets"
-SCICLOUD_S3_DEBUG_LEVEL = 0
+SCICLOUD_BUCKET_TYPE = "" # "s3" or "gs"
+SCICLOUD_BUCKET_ACCESS_KEY = None
+SCICLOUD_BUCKET_SECRET_KEY = None
+SCICLOUD_BUCKET_NAME = "scicloud-user-buckets"
+SCICLOUD_BUCKET_CLIENT_ACCESS_KEY = None
+SCICLOUD_BUCKET_CLIENT_SECRET_KEY = None
+SCICLOUD_BUCKET_DEBUG_LEVEL = 0
 
 try:
     from local_settings import *
@@ -290,10 +291,11 @@ except ImportError:
 
 assert SCICLOUD_API_ROOT_URL is not None
 
-assert SCICLOUD_S3_ACCESS_KEY is not None
-assert SCICLOUD_S3_SECRET_KEY is not None
-assert SCICLOUD_S3_CLIENT_ACCESS_KEY is not None
-assert SCICLOUD_S3_CLIENT_SECRET_KEY is not None
+assert SCICLOUD_BUCKET_TYPE in ("s3", "gs")
+assert SCICLOUD_BUCKET_ACCESS_KEY is not None
+assert SCICLOUD_BUCKET_SECRET_KEY is not None
+assert SCICLOUD_BUCKET_CLIENT_ACCESS_KEY is not None
+assert SCICLOUD_BUCKET_CLIENT_SECRET_KEY is not None
 
 import djcelery
 djcelery.setup_loader()
