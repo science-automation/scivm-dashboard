@@ -27,7 +27,7 @@ zerorpc
 sh
 # add cloud provider libraries
 apache-libcloud
-boto
+boto==2.23.0
 StarCluster
 paramiko 
 workerpool
