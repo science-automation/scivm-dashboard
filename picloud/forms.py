@@ -88,7 +88,7 @@ class CronAddForm(JobAddForm):
         )
     
     def clean_cron_exp(self):
-        from cloud.util.cronexpr import CronTime
+        from scicloud.util.cronexpr import CronTime
         cron_exp = self.cleaned_data.get("cron_exp", "")
         try:
             CronTime(cron_exp)
