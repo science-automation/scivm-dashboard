@@ -22,7 +22,7 @@ times==0.6.1
 wsgiref==0.1.2
 django-json-field==0.5.5
 ipython
-cloud
+scicloud
 zerorpc
 sh
 # add cloud provider libraries
