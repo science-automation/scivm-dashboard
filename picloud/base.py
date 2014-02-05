@@ -30,7 +30,7 @@ from tastypie.exceptions import ImmediateHttpResponse
 from apikey.authentication import SciCloudApiKeyAuthentication
 from jobs.jids import JIDS
 
-from cloud.util.zip_packer import Packer, UnPacker
+from scicloud.util.zip_packer import Packer, UnPacker
 
 import json
 import pickle
@@ -42,65 +42,65 @@ logger = logging.getLogger("dummy")
 
 def dispatch(path="", methods=("POST",)):
     """ You can resgister your extra handlers using this decorator.
-        
+
         class MyResource(CloudResourceMixin, SomeResourceClass):
-            
+
             @dispatch("/path/without/api/version/resource/prefix/(?<pk>\w+)/", methods=("POST",))
             def my_stuff_hnd(self, request, pk, **kwargs):
                 # handler code
-        
+
         Handlers must be postfixed with "_hnd".
         If you don't specify path it will build one from the name of the function.
-        
+
         @dispatch
         def add_item_hnd(..)  ->  /<api>/<version>/<resource_name>/add/item/
     """
 
     def wrapper0(f):
-        @functools.wraps(f)    
+        @functools.wraps(f)
         def wrapper(self, request, **kwargs):
             return self.dispatch_cloud(f, request, **kwargs)
-        
+
         wrapper.dispatched = True
         wrapper.path = path
         wrapper.methods = methods
-        
+
         return wrapper
-    
+
     if callable(path):
         f = path
         path = "/".join(f.func_name[:-4].split("_"))
         return wrapper0(f)
-    
+
     return wrapper0
 
 
 class CloudResourceMixin(object):
-    """ Helper. Use with your resource class. 
+    """ Helper. Use with your resource class.
         See CloudResource, CloudModelResource below.
-        
+
         Features:
 
         *   @dispatch decorator support
         *   logs incoming data if settings.DEBUG=True
-        *   json file unpacker 
+        *   json file unpacker
         *   jids file unpacker
 
     """
-    
+
     def load_json_from_file(self, request, name):
         """ Try to load json object from request.FILES[<name>] """
         if name not in request.FILES:
             logger.debug("file is missing: %s" % name)
             raise ValidationError("%s is required" % name)
-        
+
         try:
             raw = UnPacker(request.FILES[name]).next()
             return json.loads(raw)
         except Exception, e:
             logger.debug("cannot load json in %s: %s" % (name, str(e)))
             raise ValidationError("%s cannot be parsed" % name)
-    
+
     def load_jids_from_file(self, request, name):
         """ Try to load jids object from request.FILES[<name>] """
         jids_desc = self.load_json_from_file(request, name)
@@ -109,13 +109,13 @@ class CloudResourceMixin(object):
         except Exception, e:
             logger.debug("jids descriptor is invalid in %s: %s %s" % (name, str(jids_desc)), str(e))
             raise ValidationError("%s is invalid" % name)
-    
+
     def dispatch_cloud(self, method, request, **kwargs):
         """
         Handles the common operations (allowed HTTP method, authentication,
         throttling, method lookup) surrounding most CRUD interactions.
         """
-        
+
         if 'HTTP_X_HTTP_METHOD_OVERRIDE' in request.META:
             request.method = request.META['HTTP_X_HTTP_METHOD_OVERRIDE']
 
@@ -124,7 +124,7 @@ class CloudResourceMixin(object):
 
         # All clear. Process the request.
         # request = convert_post_to_put(request)
-        
+
         if settings.DEBUG:
             self.log_request_info(request, **kwargs)
             self.log_incoming_files(request, **kwargs)
@@ -141,7 +141,7 @@ class CloudResourceMixin(object):
             return http.HttpNoContent()
 
         return response
-    
+
     def log_incoming_files(self, request, **kwargs):
         logger.debug("FILES")
         for name, f in request.FILES.items():
@@ -168,25 +168,25 @@ class CloudResourceMixin(object):
                 logger.debug("    some binary file - dont know how to unpack")
             f.seek(0)
         logger.debug("")
-         
+
     def log_request_info(self, request, **kwargs):
         logger.debug("--------------------------------------------")
         logger.debug("REQUEST   {path}".format(path=request.path))
         logger.debug("METHOD    {method}".format(method=request.method))
-        logger.debug("HANDLER   {self}".format(self=self.__class__)) 
-            
+        logger.debug("HANDLER   {self}".format(self=self.__class__))
+
         if request.GET:
             logger.debug("URLARGS")
             for k,v in request.GET.items():
                 logger.debug("    {k}: {v}".format(k=k, v=v))
             logger.debug("")
-            
-        if request.POST: 
+
+        if request.POST:
             logger.debug("POSTDATA")
             for k,v in request.POST.items():
                 logger.debug("    {k}: {v}".format(k=k, v=v))
             logger.debug("")
-        
+
     def prepend_urls(self):
         """ Generate url entries for handlers """
         endpoint_methods = [ getattr(self, attr_name) for attr_name in dir(self) if attr_name.endswith("_hnd")]
@@ -201,13 +201,13 @@ class CloudResourceMixin(object):
             path = "/" + path
         if not path.endswith("/"):
             path = path + "/"
-        url = django_urls.url(r"^(?P<resource_name>%s)%s$" % (rn, path), 
-                self.wrap_view('%s' % attr_name), 
+        url = django_urls.url(r"^(?P<resource_name>%s)%s$" % (rn, path),
+                self.wrap_view('%s' % attr_name),
                 name="cloudapi-%s-%s" % (rn, attr_name.replace("_","-")[:-4]),
-        ) 
+        )
         # logger.info("cloudapi pattern registered: %s" % url)
         return url
-    
+
     def raise_response(self, request, data, response_class=http.HttpResponse):
         raise ImmediateHttpResponse(self.error_response(request, data, response_class=response_class))
 

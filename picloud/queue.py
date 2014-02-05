@@ -24,7 +24,7 @@ from apikey.authentication import SciCloudApiKeyAuthentication
 
 from .base import CloudResource, dispatch
 
-from cloud.util.zip_packer import Packer, UnPacker
+from scicloud.util.zip_packer import Packer, UnPacker
 
 import json
 import pickle
