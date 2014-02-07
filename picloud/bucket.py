@@ -28,6 +28,9 @@ import json
 import itertools
 import datetime
 import boto
+import boto.gs
+import boto.gs.bucket
+import boto.s3.bucket
 
 import base64
 import hmac
