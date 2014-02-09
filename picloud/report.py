@@ -15,48 +15,25 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with Science VM. If not, see <http://www.gnu.org/licenses/>.
 
-from django.contrib.auth.models import User
-from django.conf.urls import url
-
-from tastypie import fields
 from tastypie.authorization import Authorization
 from apikey.authentication import SciCloudApiKeyAuthentication
 
 from .base import CloudResource, dispatch
 
-from scicloud.util.zip_packer import Packer, UnPacker
 
-import json
-import pickle
+class CloudReportResource(CloudResource):
 
-
-class CloudAccountResource(CloudResource):
-    
     class Meta:
-        resource_name = 'account'
+        resource_name = 'report'
         authorization = Authorization()
         authentication = SciCloudApiKeyAuthentication()
         list_allowed_methods = []
         detail_allowed_methods = []
-    
-    @dispatch("/")
-    def create_hnd(self, request, **kwargs):
-        return self.create_response(request, {})
-    
-    @dispatch
-    def list_hnd(self, request, **kwargs):
-        return self.create_response(request, {})
-    
-    @dispatch("/(?P<pk>\d+)/")
-    def get_hnd(self, request, pk, **kwargs):
-        return self.create_response(request, {})
-    
-    @dispatch("/(?P<pk>\d+)/activate/")
-    def activate_hnd(self, request, pk,  **kwargs):
-        return self.create_response(request, {})
-    
-    @dispatch("/(?P<pk>\d+)/deactivate/")
-    def deactivate_hnd(self, request, pk, **kwargs):
-        return self.create_response(request, {})
-    
 
+    @dispatch
+    def install_hnd(self, request, **kwargs):
+        return self.create_response(request, {})
+
+    @dispatch("/python_error/")
+    def python_error_hnd(self, request, **kwargs):
+        return self.create_response(request, {})
