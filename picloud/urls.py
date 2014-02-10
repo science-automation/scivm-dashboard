@@ -19,7 +19,7 @@ from tastypie.api import Api
 
 from .servers import CloudServerResource
 from .modules import CloudPackageResource, CloudModuleResource
-from .account import CloudAccountResource
+from .key import CloudKeyResource
 from .job import CloudJobResource
 from .bucket import CloudBucketResource
 from .file_ import CloudFileResource
@@ -29,13 +29,14 @@ from .env import CloudEnvironmentResource
 from .queue import CloudQueueResource
 from .realtime import CloudRealtimeResource
 from .rest import CloudRestResource
+from .report import CloudReportResource
 
 cloud_api = Api(api_name='cloud')
 
 cloud_api.register( CloudServerResource())
 cloud_api.register( CloudPackageResource())
 cloud_api.register( CloudModuleResource())
-cloud_api.register( CloudAccountResource())
+cloud_api.register( CloudKeyResource())
 cloud_api.register( CloudJobResource())
 cloud_api.register( CloudBucketResource())
 cloud_api.register( CloudFileResource())
@@ -45,4 +46,5 @@ cloud_api.register( CloudEnvironmentResource())
 cloud_api.register( CloudQueueResource())
 cloud_api.register( CloudRestResource())
 cloud_api.register( CloudRealtimeResource())
+cloud_api.register( CloudReportResource())
 
