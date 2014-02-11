@@ -42,9 +42,9 @@ if [ ! -z "$REDIS_PORT_6379_TCP_ADDR" ] ; then
 fi
 mkdir -p $LOG_DIR
 cd $APP_DIR
-echo "REDIS_HOST=\"$REDIS_HOST\"" > $CONFIG
-echo "REDIS_PORT=$REDIS_PORT" >> $CONFIG
-cat << EOF >> $CONFIG
+#echo "REDIS_HOST=\"$REDIS_HOST\"" > $CONFIG
+#echo "REDIS_PORT=$REDIS_PORT" >> $CONFIG
+#cat << EOF >> $CONFIG
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.${DB_TYPE}',
