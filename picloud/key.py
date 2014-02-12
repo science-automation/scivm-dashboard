@@ -80,11 +80,11 @@ class CloudKeyResource(CloudResource):
         key = self._get_key(request, pk)
         key.enabled = True
         key.save()
-        return self.create_response(request, "ACTIVATED")
+        return self.create_response(request, {})
 
     @dispatch("/(?P<pk>\d+)/deactivate/")
     def deactivate_hnd(self, request, pk, **kwargs):
         key = self._get_key(request, pk)
         key.enabled = False
         key.save()
-        return self.create_response(request, "DEACTIVATED")
+        return self.create_response(request, {})
