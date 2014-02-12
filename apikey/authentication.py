@@ -16,19 +16,14 @@
 # along with Science VM. If not, see <http://www.gnu.org/licenses/>.
 
 import base64
-import hmac
-import time
-import uuid
 
 from django.conf import settings
-from django.contrib.auth import authenticate
-from django.core.exceptions import ImproperlyConfigured
-from django.middleware.csrf import _sanitize_token, constant_time_compare
-from django.utils.http import same_origin
-from django.utils.translation import ugettext as _
 from tastypie.http import HttpUnauthorized
-from tastypie.compat import User, username_field
-from tastypie.authentication import Authentication, ApiKeyAuthentication, SessionAuthentication, MultiAuthentication
+from tastypie.authentication import (
+    Authentication, ApiKeyAuthentication, SessionAuthentication,
+    MultiAuthentication
+)
+from django.contrib.auth.models import User
 
 try:
     from hashlib import sha1
@@ -50,7 +45,6 @@ try:
     import oauth_provider
 except ImportError:
     oauth_provider = None
-
 
 
 class MultiApiKeyAuthentication(ApiKeyAuthentication):
@@ -83,7 +77,9 @@ class MultiApiKeyAuthentication(ApiKeyAuthentication):
         from .models import ApiKey
 
         try:
-            return ApiKey.objects.select_related("user", "user__profile").get(user__username=username, key=api_secretkey, enabled=True)
+            return ApiKey.objects.select_related("user",).get(
+                user__username=username, key=api_secretkey, enabled=True
+            )
         except ApiKey.DoesNotExist:
             return None
 
@@ -102,14 +98,15 @@ class SciCloudApiKeyAuthentication(Authentication):
     def extract_credentials(self, request):
         if settings.DEBUG and settings.API_DEBUG_AUTH_USERNAME:
             # FIXME remove this code
-            from tastypie.compat import User
             try:
-                user = User.objects.get(username=settings.API_DEBUG_AUTH_USERNAME)
+                user = User.objects.get(
+                    username=settings.API_DEBUG_AUTH_USERNAME
+                )
                 apikey = user.get_default_apikey()
                 if apikey is None:
                     return None, None
                 return apikey.pk, apikey.key
-            except (User.DoesNotExist, IndexError), e:
+            except (User.DoesNotExist, IndexError):
                 pass
 
         if request.META.get('HTTP_AUTHORIZATION'):
@@ -122,13 +119,13 @@ class SciCloudApiKeyAuthentication(Authentication):
             if len(creds) == 2:
                 return creds
 
-        return None, None
+            return None, None
 
     def is_authenticated(self, request, **kwargs):
         """
-        Should return either ``True`` if allowed, ``False`` if not or an
-        ``HttpResponse`` if you need something custom.
-        """
+            Should return either ``True`` if allowed, ``False`` if not or an
+            ``HttpResponse`` if you need something custom.
+            """
 
         api_key, api_secretkey = self.extract_credentials(request)
         if not api_key or not api_secretkey:
@@ -144,7 +141,7 @@ class SciCloudApiKeyAuthentication(Authentication):
             return False
 
         request.user = user
-        request.apikey = apikey
+        request.apikey = apikey if apikey.pk is not None else None
 
         return True
 
@@ -152,9 +149,24 @@ class SciCloudApiKeyAuthentication(Authentication):
         from .models import ApiKey
 
         try:
-            return ApiKey.objects.select_related("user", "user__profile").get(pk=api_key, key=api_secretkey, enabled=True)
+            return ApiKey.objects.select_related("user",).get(
+                pk=api_key, key=api_secretkey, enabled=True
+            )
         except ApiKey.DoesNotExist:
             return None
+        except ValueError:
+            pass
+
+        # try to authenticate by email/password
+        try:
+            user = User.objects.get(email=api_key)
+            if not user.check_password(api_secretkey):
+                return None
+        except User.DoesNotExist:
+            return None
+
+        apikey = ApiKey(user=user)
+        return apikey
 
     def get_identifier(self, request):
         if hasattr(request, "user") and hasattr(request.user, "username"):
