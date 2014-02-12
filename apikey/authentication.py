@@ -28,7 +28,7 @@ from django.utils.http import same_origin
 from django.utils.translation import ugettext as _
 from tastypie.http import HttpUnauthorized
 from tastypie.compat import User, username_field
-from tastypie.authentication import Authentication, ApiKeyAuthentication
+from tastypie.authentication import Authentication, ApiKeyAuthentication, SessionAuthentication, MultiAuthentication
 
 try:
     from hashlib import sha1
@@ -54,7 +54,7 @@ except ImportError:
 
 
 class MultiApiKeyAuthentication(ApiKeyAuthentication):
-    
+
     def is_authenticated(self, request, **kwargs):
         """
         Should return either ``True`` if allowed, ``False`` if not or an
@@ -64,16 +64,16 @@ class MultiApiKeyAuthentication(ApiKeyAuthentication):
         username, api_secretkey = self.extract_credentials(request)
         if not username or not api_secretkey:
             return self._unauthorized()
-        
+
         apikey = self.get_key(username, api_secretkey)
         if apikey is None:
             return self._unauthorized()
-        
+
         user = apikey.user
-        
+
         if not self.check_active(user):
             return False
-        
+
         request.user = user
         request.apikey = apikey
 
@@ -108,7 +108,7 @@ class SciCloudApiKeyAuthentication(Authentication):
                 apikey = user.get_default_apikey()
                 if apikey is None:
                     return None, None
-                return apikey.pk, apikey.key 
+                return apikey.pk, apikey.key
             except (User.DoesNotExist, IndexError), e:
                 pass
 
@@ -117,13 +117,13 @@ class SciCloudApiKeyAuthentication(Authentication):
             parts = request.META['HTTP_AUTHORIZATION'].split()
             if len(parts) != 2 and parts[0].lower() != 'basic':
                 return None, None
-            
+
             creds = base64.b64decode(parts[1]).split(':', 1)
             if len(creds) == 2:
                 return creds
 
         return None, None
-        
+
     def is_authenticated(self, request, **kwargs):
         """
         Should return either ``True`` if allowed, ``False`` if not or an
@@ -133,16 +133,16 @@ class SciCloudApiKeyAuthentication(Authentication):
         api_key, api_secretkey = self.extract_credentials(request)
         if not api_key or not api_secretkey:
             return self._unauthorized()
-        
+
         apikey = self.get_key(api_key, api_secretkey)
         if apikey is None:
             return self._unauthorized()
-        
+
         user = apikey.user
-        
+
         if not self.check_active(user):
             return False
-        
+
         request.user = user
         request.apikey = apikey
 

@@ -16,7 +16,7 @@
 # along with Science VM. If not, see <http://www.gnu.org/licenses/>.
 
 from tastypie.authorization import Authorization
-from tastypie.authentication import Authentication
+from apikey.authentication import Authentication
 from apikey.authentication import SciCloudApiKeyAuthentication
 
 from .base import CloudResource, dispatch
