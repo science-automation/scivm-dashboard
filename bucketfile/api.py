@@ -18,8 +18,7 @@
 from tastypie import fields
 from tastypie.resources import ModelResource
 from tastypie.authorization import Authorization
-from tastypie.authentication import (ApiKeyAuthentication,
-    SessionAuthentication, MultiAuthentication)
+from apikey.authentication import MultiApiKeyAuthentication, SessionAuthentication, MultiAuthentication
 from django.contrib.auth.models import User
 from tastypie.bundle import Bundle
 from django.conf.urls import url
@@ -38,6 +37,6 @@ class BucketFileResource(ModelResource):
         resource_name = 'bucketfile'
         authorization = Authorization()
         authentication = MultiAuthentication(
-            ApiKeyAuthentication(), SessionAuthentication())
+            MultiApiKeyAuthentication(), SessionAuthentication())
         list_allowed_methods = ['get', 'post']
         detail_allowed_methods = ['get', 'post', 'delete']

@@ -17,6 +17,7 @@
 
 import hmac
 import time
+import uuid
 from django.conf import settings
 from django.db import models
 from tastypie.utils import now
@@ -35,52 +36,44 @@ class ApiAccess(models.Model):
     url = models.CharField(max_length=255, blank=True, default='')
     request_method = models.CharField(max_length=10, blank=True, default='')
     accessed = models.PositiveIntegerField()
-    
+
     def __unicode__(self):
         return u"%s @ %s" % (self.identifier, self.accessed)
-    
+
     def save(self, *args, **kwargs):
         self.accessed = int(time.time())
         return super(ApiAccess, self).save(*args, **kwargs)
 
 
-if 'django.contrib.auth' in settings.INSTALLED_APPS:
-    import uuid
-    from tastypie.compat import AUTH_USER_MODEL
-    class ApiKey(models.Model):
-        user = models.ForeignKey(AUTH_USER_MODEL)
-        key = models.CharField(max_length=128, blank=True, default='', db_index=True)
-        enabled = models.BooleanField(default=True)
-        created = models.DateTimeField(default=now)
-        description = models.CharField(max_length=256, blank=True, default='')
+class ApiKey(models.Model):
+    user = models.ForeignKey(User)
+    key = models.CharField(max_length=128, blank=True, default='', db_index=True)
+    enabled = models.BooleanField(default=True)
+    created = models.DateTimeField(default=now)
+    description = models.CharField(max_length=256, blank=True, default='')
 
-        def __unicode__(self):
-            return u"%s for %s" % (self.key, self.user)
-        
-        def save(self, *args, **kwargs):
-            if not self.key:
-                self.key = self.generate_key()
-            
-            return super(ApiKey, self).save(*args, **kwargs)
-        
-        def generate_key(self):
-            # Get a random UUID.
-            new_uuid = uuid.uuid4()
-            # Hmac that beast.
-            return hmac.new(str(new_uuid), digestmod=sha1).hexdigest()
+    def __unicode__(self):
+        return u"%s for %s" % (self.key, self.user)
 
-        class Meta:
-            abstract = getattr(settings, 'TASTYPIE_ABSTRACT_APIKEY', False)
-    
-    
-    def create_api_key(sender, **kwargs):
-        """
-        A signal for hooking up automatic ``ApiKey`` creation.
-        """
-        if kwargs.get('created') is True:
-            ApiKey.objects.create(user=kwargs.get('instance'))
+    def save(self, *args, **kwargs):
+        if not self.key:
+            self.key = self.generate_key()
 
-    import tastypie.authentication
-    from . import authentication
-    tastypie.authentication.ApiKeyAuthentication = authentication.MultiApiKeyAuthentication
+        return super(ApiKey, self).save(*args, **kwargs)
 
+    def generate_key(self):
+        # Get a random UUID.
+        new_uuid = uuid.uuid4()
+        # Hmac that beast.
+        return hmac.new(str(new_uuid), digestmod=sha1).hexdigest()
+
+    class Meta:
+        abstract = getattr(settings, 'TASTYPIE_ABSTRACT_APIKEY', False)
+
+
+def create_api_key(sender, **kwargs):
+    """
+    A signal for hooking up automatic ``ApiKey`` creation.
+    """
+    if kwargs.get('created') is True:
+        ApiKey.objects.create(user=kwargs.get('instance'))

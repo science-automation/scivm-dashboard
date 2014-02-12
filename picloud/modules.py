@@ -21,7 +21,7 @@ from django.conf import settings
 
 from tastypie import fields
 from tastypie.authorization import Authorization
-from tastypie.authentication import Authentication
+from apikey.authentication import Authentication
 from apikey.authentication import SciCloudApiKeyAuthentication
 
 from .base import CloudResource, dispatch
