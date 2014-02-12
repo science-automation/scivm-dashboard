@@ -289,6 +289,11 @@ try:
 except ImportError:
     pass
 
+try:
+    from local_settings_dashboard import *
+except ImportError:
+    pass
+
 assert SCICLOUD_API_ROOT_URL is not None
 
 assert SCICLOUD_BUCKET_TYPE in ("s3", "gs")
